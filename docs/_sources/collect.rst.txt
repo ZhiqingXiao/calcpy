@@ -7,5 +7,7 @@ Utility functions to operator `list`, `tuple`, and `set`.
 List of APIs
 ------------
 
+.. autofunction:: calcpy.groupby
+.. autofunction:: calcpy.partition
 .. autofunction:: calcpy.concat
 .. autofunction:: calcpy.convert_nested_dict_to_nested_list

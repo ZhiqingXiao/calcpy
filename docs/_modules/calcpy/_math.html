@@ -342,6 +342,21 @@
 <span class="sd">            https://docs.python.org/3/library/math.html#math.exp2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="minmax">
+<a class="viewcode-back" href="../../builtin.html#calcpy.minmax">[docs]</a>
+<span class="k">def</span> <span class="nf">minmax</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get both min and max.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; minmax([1, 3, 4])</span>
+<span class="sd">        (1, 4)</span>
+<span class="sd">        &gt;&gt;&gt; minmax(1, 3, 4)</span>
+<span class="sd">        (1, 4)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>

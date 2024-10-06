@@ -218,7 +218,8 @@ def dispatch(dispatcher=None, /, *, agg=None, fix_begin=0):
     """Return callable that calculates using the first and each of the rest parameters with optional aggregation.
 
     Parameters:
-        dispatcher (Callable[iterable, list[iterable]]): Callable that accepts an iterable and returns a list of iterables.
+        dispatcher (Callable[iterable, list[iterable]]): Callable that accepts
+            an iterable and returns a list of iterables.
             By default, the dispatcher is ``itertools.batched(*, n=1)``.
         agg (callable, optional): Aggretion.
         fix_begin (int): Number of parameters to fix.

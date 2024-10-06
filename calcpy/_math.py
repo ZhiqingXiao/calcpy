@@ -291,3 +291,15 @@ except ImportError:
             https://docs.python.org/3/library/math.html#math.exp2
         """
         return 2 ** x
+
+
+def minmax(*args, **kwargs):
+    """Get both min and max.
+
+    Examples:
+        >>> minmax([1, 3, 4])
+        (1, 4)
+        >>> minmax(1, 3, 4)
+        (1, 4)
+    """
+    return min(*args, **kwargs), max(*args, **kwargs)

@@ -92,6 +92,7 @@ maximal = _po.maximal
 min_ = min
 min_repetend_len = _seq.min_repetend_len
 minimal = _po.minimal
+minmax = _math.minmax
 mod = operator.mod
 mul = _math.mul
 ne = _op.ne
