@@ -32,8 +32,8 @@ def fillwhen(check, value):
     """Decorator that returns a default value if a condition is met.
 
     Parameters:
-        check (callable): The condition checker.
-        value : The value to return when the condition is met.
+        check (callable): Condition checker.
+        value : Value to return when the condition is met.
 
     Returns:
         callable:
@@ -63,7 +63,7 @@ def fillnone(value=nan):
     """Decorator that returns a default value if the result is ``None``.
 
     Parameters:
-        value : The value to return if the result is ``None``.
+        value : Value to return if the result is ``None``.
 
     Returns:
         callable:
@@ -93,7 +93,7 @@ def fillnan(value=0):
     """Decorator that returns a default value if the result is nan.
 
     Parameters:
-        value : The value to return if the result is nan.
+        value : Value to return if the result is nan.
 
     Returns:
         callable:

@@ -4,6 +4,7 @@ import operator
 from . import _fill
 from . import _math
 from . import _op
+from . import _po
 from . import _seq
 from . import _set
 
@@ -23,7 +24,7 @@ bool_ = bool
 ceil = math.ceil
 comb = math.comb
 concat = _op.concat
-contains = operator.contains
+contains = _set.contains
 cos = math.cos
 cosh = math.cosh
 countOf = operator.countOf
@@ -68,6 +69,8 @@ isdisjoint = _set.isdisjoint
 isfinite = math.isfinite
 isinf = math.isinf
 isinstance_ = isinstance
+ispropersubset = _set.ispropersubset
+ispropersuperset = _set.ispropersuperset
 isqrt = math.isqrt
 issubset = _set.issubset
 issuperset = _set.issuperset
@@ -85,8 +88,10 @@ lt = _op.lt
 matmul = _math.matmul
 matprod = _math.matprod
 max_ = max
+maximal = _po.maximal
 min_ = min
 min_repetend_len = _seq.min_repetend_len
+minimal = _po.minimal
 mod = operator.mod
 mul = _math.mul
 ne = _op.ne
@@ -100,6 +105,7 @@ ord_ = ord
 perm = math.perm
 pos = operator.pos
 pow_ = operator.pow
+prioritize = _seq.prioritize
 prod = math.prod
 radians = math.radians
 range_ = range

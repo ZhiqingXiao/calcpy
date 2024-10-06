@@ -76,9 +76,12 @@ When the first argument is a ``dict`` and subsequent arguments are ``list`` s, `
 Set Operation APIs
 ------------------
 
+.. autofunction:: calcpy.contains
 .. autofunction:: calcpy.difference
 .. autofunction:: calcpy.intersection
 .. autofunction:: calcpy.isdisjoint
+.. autofunction:: calcpy.ispropersubset
+.. autofunction:: calcpy.ispropersuperset
 .. autofunction:: calcpy.issubset
 .. autofunction:: calcpy.issuperset
 .. autofunction:: calcpy.symmetric_difference

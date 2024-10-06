@@ -50,7 +50,7 @@ def eq_to_cmp(eq=operator.eq):
             -1 if the first is less than the second, and 0 if they are equal.
 
     Note:
-        This function is experimental and may change in the future.
+        This function is experimental and may be changed in the future.
 
     Examples:
         >>> cmp = eq_to_cmp(operator.eq)
@@ -81,7 +81,7 @@ def ne_to_cmp(ne=operator.ne):
             -1 if the first is less than the second, and 0 if they are equal.
 
     Note:
-        This function is experimental and may change in the future.
+        This function is experimental and may be changed in the future.
 
     Examples:
         >>> cmp = ne_to_cmp(operator.ne)
@@ -230,6 +230,9 @@ def eq_to_key(eq=operator.eq):
 
     Returns:
         callable:
+
+    Note:
+        This function is experimental and may change in the future.
     """
     cmp = eq_to_cmp(eq)
     key = cmp_to_key(cmp)

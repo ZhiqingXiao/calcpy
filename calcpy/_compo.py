@@ -294,7 +294,5 @@ def componentize(how, /):
 
 def getcomponent(module, name):
     f = getattr(module, name)
-    return componentize(f)
-    # if composition_enabled():
-    #     return componentize(f)
-    # return f  # return raw fun to avoid mess up function signature and docstring
+    component = componentize(f)
+    return component

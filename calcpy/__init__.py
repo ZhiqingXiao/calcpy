@@ -1,3 +1,4 @@
+from ._cls import *  # noqa: F401,F403
 from ._collect import *  # noqa: F401,F403
 from ._cmp import *  # noqa: F401,F403
 from ._compo import getcomponent

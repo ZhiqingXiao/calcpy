@@ -5,8 +5,8 @@ def convert_nested_dict_to_nested_list(data, /, maxdepth=inf):
     """Convert a nested dictionary to a nested list.
 
     Parameters:
-        data (dict): The nested dictionary to convert.
-        maxdepth (int): The maximum depth to convert to a nested list.
+        data (dict): Nested dictionary to convert.
+        maxdepth (int): Maximum depth to convert to a nested list.
 
     Returns:
         list: A nested list representation of the nested dictionary.

@@ -110,8 +110,8 @@ def full_like(template, fill_value, **kwargs):
     """Create a np.array or pd.Series or pd.DataFrame with the same shape as template.
 
     Parameters:
-        template (np.ndarray or pd.Series or pd.DataFrame):
-        fill_value : The value to populate.
+        template (np.ndarray | pd.Series | pd.DataFrame):
+        fill_value : Value to populate.
         **kwargs: Keyword arguments for ``np.full_alike()``, ``pd.Series()``, or ``pd.DataFrame()``.
 
     Returns:

@@ -39,7 +39,7 @@ def add(*args, default=0):
         default: Default value to return if no arguments are provided.
 
     Returns:
-        The sum of all arguments.
+        Sum of all arguments.
 
     Example:
         >>> add()
@@ -63,7 +63,7 @@ def mul(*args, default=1):
         default: Default value to return if no arguments are provided.
 
     Returns:
-        The product of all arguments.
+        Product of all arguments.
 
     Example:
         >>> mul()
@@ -87,7 +87,7 @@ def matmul(*args, default=1):
         default: Default value to return if no arguments are provided.
 
     Returns:
-        The matrix product of all arguments.
+        Matrix product of all arguments.
 
     Example:
         >>> import numpy as np
@@ -116,11 +116,11 @@ except ImportError:
         """Calculate the sum of products of all elements in an iterable.
 
         Parameters:
-            iterable: An iterable object.
-            start: Starting value.
+            iterable : An iterable object.
+            start : Starting value.
 
         Returns:
-            The sum of products of all elements in the iterable.
+            Sum of products of all elements in the iterable.
 
         Example:
             >>> sumprod([1, 2, 3])
@@ -141,7 +141,7 @@ def matprod(values, start=1):
         start: Starting value.
 
     Returns:
-        The matrix product of all arguments.
+        Matrix product of all arguments.
 
     Example:
         >>> import numpy as np
@@ -176,7 +176,7 @@ def gcd(*args, empty=0):
         empty: Value to return if no arguments are provided.
 
     Returns:
-        The greatest common divisor of all arguments.
+        Greatest common divisor of all arguments.
 
     Example:
         >>> gcd()
@@ -205,7 +205,7 @@ except ImportError:
             empty: Value to return if no arguments are provided.
 
         Returns:
-            The least common multiple of all arguments.
+            Least common multiple of all arguments.
 
         Example:
             >>> lcm()
@@ -235,7 +235,7 @@ except ImportError:
             z: Third number.
 
         Returns:
-            The result of x * y + z.
+            Result of x * y + z.
 
         Examples:
             >>> fma(2, 3, 4)
@@ -256,7 +256,7 @@ except ImportError:
             x: Number.
 
         Returns:
-            The cube root of x.
+            Cube root of x.
 
         Example:
             >>> cbrt(8)

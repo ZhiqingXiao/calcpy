@@ -175,11 +175,11 @@ class constantcreator:
     """Callable that returns the same constant when it is called.
 
     Parameters:
-        value: The constant value to be returned.
-        copy: If ``True``, return a new copy of the constant value.
+        value : Constant value to be returned.
+        copy : If ``True``, return a new copy of the constant value.
 
     Returns:
-        Callable object that returns ``value``, ignoring its parameters.
+        callable: Callable object that returns ``value``, ignoring its parameters.
 
     Examples:
         Always return the string ``"value"``.
@@ -229,7 +229,7 @@ def all_(iterable, empty=True):
 
     Parameters:
         iterable (iterable):
-        empty : The value if ``iterable`` is empty.
+        empty : Value if ``iterable`` is empty.
 
     Returns:
         bool
@@ -263,7 +263,7 @@ def any_(iterable, *, empty=False):
 
     Parameters:
         iterable (iterable):
-        empty : The value if ``iterable`` is empty.
+        empty : Value if ``iterable`` is empty.
 
     Returns:
         bool
@@ -295,7 +295,7 @@ def never(iterable, *, empty=True):
 
     Parameters:
         iterable (iterable):
-        empty : The value if ``iterable`` is empty.
+        empty : Value if ``iterable`` is empty.
 
     Returns:
         bool
@@ -324,7 +324,7 @@ def odd(iterable, *, empty=False):
 
     Parameters:
         iterable (iterable):
-        empty : The value if ``iterable`` is empty.
+        empty : Value if ``iterable`` is empty.
 
     Returns:
         bool
@@ -354,7 +354,7 @@ def and_(*args, empty=True):
 
     Parameters:
         *args
-        empty : The value if ``args`` have no values.
+        empty : Value if ``args`` have no values.
 
     Returns:
         bool:
@@ -380,7 +380,7 @@ def or_(*args, empty=False):
 
     Parameters:
         *args
-        empty : The value if ``args`` have no values.
+        empty : Value if ``args`` have no values.
 
     Returns:
         bool:
@@ -406,7 +406,7 @@ def xor(*args, empty=False):
 
     Parameters:
         *args
-        empty : The value if ``args`` have no values.
+        empty : Value if ``args`` have no values.
 
     Returns:
         bool:
@@ -423,32 +423,6 @@ def xor(*args, empty=False):
         https://docs.python.org/3/library/operator.html#operator.xor
     """
     return odd(args, empty=empty)
-
-
-def allpairwise(binop, *args, **kwargs):
-    """Return ``True`` when binary operator returns ``True`` for each pair of arguments.
-
-    Parameters:
-        binop (callable): Binary operator.
-        *args : Positional arguments.
-        **kwargs : Keyword arguments.
-
-    Returns:
-        bool:
-
-    Examples:
-        >>> import operator
-        >>> allpairwise(operator.lt)
-        True
-        >>> allpairwise(operator.lt, 1)
-        True
-        >>> allpairwise(operator.lt, 1, 2, 3, 4)
-        True
-        >>> allpairwise(operator.lt, 1, 2, 2, 4)
-        False
-    """
-    iterable = (binop(*p, **kwargs) for p in pairwise(args))
-    return all_(iterable, empty=True)
 
 
 def _allpairwise_glet(glet_name):

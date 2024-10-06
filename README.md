@@ -6,21 +6,18 @@
 Main features:
 
 - Extended Python built-in functions, including extended `set` operations, extended `str` operations, extended math functions.
-
-- Unified APIs supporting both Python built-in types and numpy&pandas types.
-
-- Return-value decorations: If the function raises an error or returns invalid values such as `None` and `nan`, fill the values with designated values.
-
-- Function compositions: Combine multiple callable into one callable.
-
 - Argument decorators: Reorganize function arguments.
+- Function compositions: Combine multiple callable into one callable.
+- Return-value decorations: If the function raises an error or returns invalid values such as `None` and `nan`, fill the values with designated values.
+- Unified APIs supporting both Python built-in types and numpy&pandas types.
+- Order theory: Implementations of some concepts and algorithms in order theory.
 
 
 ### Documentation
 
-Official documentation: https://zhiqingxiao.github.io/calcpy/
+Online Documentation: https://zhiqingxiao.github.io/calcpy/
 
-Third-party AI-generated documentation (not maintained by the author): https://deepwiki.com/ZhiqingXiao/calcpy
+Third-party AI-generated documentation (not maintained by the author): [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ZhiqingXiao/calcpy)
 
 
 ### Installation
@@ -70,39 +67,47 @@ Examples:
 7
 ```
 
-#### Permutate Arguments
+#### Reorganize Arguments of Callable
 
 Documentation: https://zhiqingxiao.github.io/calcpy/fun.html#reorder-arguments
 
-`calcpy` provides several APIs to permutate the parameters of a callable.
+`calcpy` provides several decorators to re-organize parameters of a callable.
 
-- `calcpy.cyclepermcaller(fun, /, *, cycle=())` instantiates a callable object that swaps positional arguments according to a cyclc notation. By default, it does not permutate anything.
-
-- `calcpy.swapcaller(fun, /, *, i=0, j=1)` instantiates a callable object that swaps `i`-th positional argument and `j`-th positional argument. By default, it permutates the first two arguments.
+- `calcpy.fun.cycleperm(cycle=())` is a decorator that swaps positional arguments of a callable according to a cyclc notation. By default, it does not permutate anything.
+- `calcpy.fun.swap(i=0, j=1)` is a decorator that swaps `i`-th positional argument and `j`-th positional argument of a callable. By default, it permutates the first two arguments of the callable.
+- `calcpy.fun.dispatch(dispatcher, agg=None, fix_begin=0)` is a decorator that dispatches a callable according to a dispatcher, with parameters to fix first few positional arguments, and an aggregation function to aggregate the final result.
+- `calcpy.fun.pack` is a decorator that merges all positional arguments of a function to a single tuple argument.
+- `calcpy.fun.unpack` is a decorator that converts a single tuple/list argument to many positional arguments.
+- `calcpy.fun.prioritize()` is a decorator that move some positional arguments to the beginning of argument list.
 
 Examples:
 
 ```python
->>> from calcpy import swapcaller
->>> executor = swapcaller(range)
->>> executor(4, 2)
+>>> from calcpy.fun import swap
+>>> @swap()  # the decorator that swaps the first two positional arguments
+... def g(a, b):
+...    return range(a, b)
+>>> g(4, 2)
+range(2, 4)
+>>> # Equivalent to:
+>>> swapper = swap()
+>>> swapped_range = swapper(range)
+>>> swapped_range(4, 2)
 range(2, 4)
 ```
 
-#### Reorganize Arguments
-
-`calcpy` provides several APIs to re-organize the parameters of a callable.
-
-- `calcpy.merge_args(fun)` merges all positional arguments of a function to a single tuple argument.
-
-- `calcpy.demerge_args(fun)` replaces a single tuple/list argument to many positional arguments.
-
-Examples:
-
 ```python
->>> from calcpy import merge_args
->>> merge_args(print)([0, 1.0, "Hello"])
-0 1.0 Hello
+>>> from calcpy.fun import dispatch
+>>> from itertools import pairwise   # For old Python version: from more_itertools import pairwise
+>>> @dispatch(pairwise, agg=all)  # the decorator that extends a binop bool checker to arbitrary number of arguments
+... def fraceq(a, b):
+...     return (a % 1) == (b % 1)
+>>> fraceq()  # return True when there are <=1 arugments, since pairwise() returns an empty iterator
+True
+>>> fraceq(1.1, 2.1)
+True
+>>> fraceq(1.1, 2.1, 3.1, 4.1)
+True
 ```
 
 #### Extended Set Functions
@@ -116,8 +121,11 @@ Documentation: https://zhiqingxiao.github.io/calcpy/set.html
 - `calcpy.difference(arg, *args, key=None)` removes follow-up arguments from the first.
 - `calcpy.symmetric_difference(*args, key=None)` returns the symmetric difference (a.k.a exclusive-or) of multiple arguments.
 - `calcpy.isdisjoint(*args, key=None)` checks whether arguments are disjoint.
+- `calcpy.ispropersubset(*args, key=None)` checks whether the former parameter is a proper subset of the later parameter.
+- `calcpy.ispropersuperset(*args, key=None)` checks whether the former parameter is a proper superset of the later parameter.
 - `calcpy.issubset(*args, key=None)` checks whether the former parameter is a subset of the later parameter.
 - `calcpy.issuperset(*args, key=None)` checks whether the former parameter is a superset of the later parameter.
+
 
 Examples:
 ```Python
@@ -149,9 +157,21 @@ Examples:
 `list`, `tuple`, `set`, `str`, `np.ndarray`, `pd.Series`, `pd.DataFrame`, and more.
 
 *`union()`, `intersection()`, and `difference()` for `dict`*:
-The function `intersection()` and `difference()` support first argument of type `dict` and follow-up arguments as type `list`. In those cases, it means that limit the keys of the `dict` with a list or exclude lists out of the dict.
 
-The function `union()` can merge multiple `dict`s into one `dict`. If two `dict`s `d1` and `d2` have the same key `k`, `union(d1, d2)` will use the value of `d1[k]` rather than `d2[k]`, which differs from `d1 | d2` who takes `d2[k]`.
+- `calcpy.intersection()` and `calcpy.difference()` support first argument of type `dict` and follow-up arguments as type `list`. In those cases, it means that limit the keys of the `dict` with a list or exclude lists out of the dict.
+
+- `calcpy.union()` can merge multiple `dict`s into one `dict`. If two `dict`s `d1` and `d2` have the same key `k`, `union(d1, d2)` will use the value of `d1[k]` rather than `d2[k]`, which differs from `d1 | d2` who takes `d2[k]`.
+
+Examples:
+```python
+>>> from calcpy import intersection, difference
+>>> d = {"a": 1, "b": 2}
+>>> l = ["a", "c"]
+>>> intersection(d, l)
+{"a": 1}
+>>> difference(d, l)
+{"b": 2}
+```
 
 *Customized comparison*:
 The keyword parameter `key` is used for customized comparison function.
@@ -170,11 +190,8 @@ True
 Documentation: https://zhiqingxiao.github.io/calcpy/builtin.html
 
 - `calcpy.arggetter(*keys, *, default)` instantiates a callable object that fetches position arguments and/or keyword arguments, with default value for missing arguments.
-
 - `calcpy.attrgetter(*attrs, *, default)` instantiates a callable object that fetches the given attribute(s) from its operand, with default value for missing attributes.
-
 - `calcpy.itemgetter(*items, *, default)` instantiates a callable object that fetches the given item(s) from its operand, with muti-level keys and default value for missing items.
-
 - `calcpy.constantcreator(value, /, *, copy=False)` instantiates a callable object that returns the same constant when it is called.
 
 
@@ -202,9 +219,7 @@ Examples:
 Documentation: https://zhiqingxiao.github.io/calcpy/fill.html
 
 - `calcpy.fillerr(fun, value=None)` instantiates a callable object that returns `value` if the function `fun` raises an exception.
-
 - `calcpy.fillnone(fun, value=None)` instantiates a callable object that returns `value` if the function `fun` returns `None`.
-
 - `calcpy.fillnan(fun, value=None)` instantiates a callable object that returns `value` if the function `fun` returns `nan`.
 
 Examples:
@@ -233,11 +248,8 @@ Examples:
 Similar to Python built-in functions `all()` and `any()`, we provide the functions with keyword parameter `empty` to specify the behavior when the sequence is empty.
 
 - `calcpy.all_(iterable, *, empty=True)` checks whether all elements in a sequence are truthy. Return `empty` if the sequence is empty. (It is equivalent to `all(iterable)` when the default value of `empty` is used.)
-
 - `calcpy.any_(iterable, *, empty=False)` checks whether any element in a sequence is truthy. Return `empty` if the sequence is empty. (It is equivalent to `any(iterable)` when the default value of `empty` is used.)
-
 - `calcpy.never(iterable, *, empty=True)` checks whether all elements in a sequence are not truthy. Return `empty` if the sequence is empty.
-
 - `calcpy.odd(iterable, *, empty=False)` checks whether an odd number of items in the iterable are truthy. Return `empty` if the sequence is empty.
 
 Usage Example:
@@ -295,6 +307,18 @@ False
 | `calcpy.matmul()`                                      | `calcpy.matprod()`                                |  
 
 
+#### Relationship among Classes
+
+Documentation: https://zhiqingxiao.github.io/calcpy/cls.html
+
+The following APIs are provided to compare classes:
+
+- `calcpy.ispropersubclass()`
+- `calcpy.ispropersuperclass()`
+- `calcpy.issubclass_()`
+- `calcpy.issuperclass()`
+
+
 #### Consistent APIs across Python built-in modules, numpy, and pandas
 
 Documentation: https://zhiqingxiao.github.io/calcpy/nppd.html
@@ -333,6 +357,7 @@ Documentation: https://zhiqingxiao.github.io/calcpy/seq.html#permutation
 
 - `calcpy.cycleperm()` permutates a list according to cycle notation.
 - `calcpy.swap()` swaps two elements in a list.
+- `calcpy.prioritize()` moves some positional arguments to the beginning.
 
 Example:
 ```python

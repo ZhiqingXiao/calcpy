@@ -13,7 +13,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Set Operations" href="set.html" />
+    <link rel="next" title="Order Theory" href="order.html" />
     <link rel="prev" title="Output Decorators" href="fill.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -23,7 +23,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="set.html" title="Set Operations"
+          <a href="order.html" title="Order Theory"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="fill.html" title="Output Decorators"
@@ -40,10 +40,67 @@
             
   <section id="comparers">
 <h1>Comparers<a class="headerlink" href="#comparers" title="Link to this heading">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">calcpy</span></code> provides comparers to compare objects. The comparers support an arbitrary number of operands. It also has a keyword parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> to customize the comparison.</p>
-<p>Experimental functionarity: The APIs provide the <code class="docutils literal notranslate"><span class="pre">Matcher</span></code> class to customize the tests for equality. They can be used in the keyword parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> of many relevant functions.</p>
-<section id="inequality-comparers">
-<h2>Inequality Comparers<a class="headerlink" href="#inequality-comparers" title="Link to this heading">¶</a></h2>
+<section id="rational-comparers">
+<h2>Rational Comparers<a class="headerlink" href="#rational-comparers" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">calcpy</span></code> provides extension of rational comparers to support multiple arguments and a parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> to customize the comparision.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.eq">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.eq" title="Link to this definition">¶</a></dt>
+<dd><p>Check whether all parameters are the same.</p>
+<p>Fully compatible with Python’s built-in <code class="docutils literal notranslate"><span class="pre">operator.eq</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong></p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eq</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.eq">https://docs.python.org/3/library/operator.html#operator.eq</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.ne">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#ne"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.ne" title="Link to this definition">¶</a></dt>
+<dd><p>Check whether all parameters are distinct.</p>
+<p>Fully compatible with Python’s built-in <code class="docutils literal notranslate"><span class="pre">operator.ne</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong></p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ne</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ne</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ne">https://docs.python.org/3/library/operator.html#operator.ne</a></p>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.lt">
 <span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">lt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.lt" title="Link to this definition">¶</a></dt>
@@ -209,171 +266,53 @@
 </dd></dl>
 
 </section>
-<section id="equality-comparers">
-<h2>Equality Comparers<a class="headerlink" href="#equality-comparers" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.eq">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.eq" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether all parameters are the same.</p>
-<p>Fully compatible with Python’s built-in <code class="docutils literal notranslate"><span class="pre">operator.eq</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong></p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eq</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.eq">https://docs.python.org/3/library/operator.html#operator.eq</a></p>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.ne">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#ne"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.ne" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether all parameters are distinct.</p>
-<p>Fully compatible with Python’s built-in <code class="docutils literal notranslate"><span class="pre">operator.ne</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong></p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ne</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ne</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://docs.python.org/3/library/operator.html#operator.ne">https://docs.python.org/3/library/operator.html#operator.ne</a></p>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.same">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">same</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#same"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.same" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether all elements are the same.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>iterable</em>)</p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">same</span><span class="p">([{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}])</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">same</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.distinct">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">distinct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_op.html#distinct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.distinct" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether all elements are distinct.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>iterable</em>)</p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distinct</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">distinct</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.unique">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_seq.html#unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.unique" title="Link to this definition">¶</a></dt>
-<dd><p>Drop duplications with original order kept.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>iterable</em>)</p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Unique values</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="go">[1, 2, 3]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="go">(1, 2, 3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">)</span>
-<span class="go">&#39;Helo&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="calcpy.count_unique">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">count_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_seq.html#count_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.count_unique" title="Link to this definition">¶</a></dt>
-<dd><p>Count the number of distinct elements.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>iterable</em>)</p></li>
-<li><p><strong>key</strong> (<em>callable</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Number of distinct elements.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">count_unique</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="go">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">count_unique</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">)</span>
-<span class="go">4</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</section>
 <section id="convert-among-comparers">
 <h2>Convert among Comparers<a class="headerlink" href="#convert-among-comparers" title="Link to this heading">¶</a></h2>
-<p>We also provide some functions to convert comparers to each other.</p>
+<p>Python has three types of comparers:</p>
+<ul class="simple">
+<li><p><strong>Rational Comparers</strong>: <code class="docutils literal notranslate"><span class="pre">eq()</span></code>, <code class="docutils literal notranslate"><span class="pre">ne()</span></code>, <code class="docutils literal notranslate"><span class="pre">lt()</span></code>, <code class="docutils literal notranslate"><span class="pre">le()</span></code>, <code class="docutils literal notranslate"><span class="pre">ge()</span></code>, <code class="docutils literal notranslate"><span class="pre">gt()</span></code>. They are provided in the built-in module <code class="docutils literal notranslate"><span class="pre">operator</span></code> and are extended in <code class="docutils literal notranslate"><span class="pre">calcpy</span></code>.</p></li>
+<li><p><strong>Callable function</strong>: Many built-in functions (such as <code class="docutils literal notranslate"><span class="pre">sorted()</span></code>, <code class="docutils literal notranslate"><span class="pre">min()</span></code>, <code class="docutils literal notranslate"><span class="pre">max()</span></code>), as well as many calcpy functions, has a parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> to specify a callable function, and the return values of this function can be used to compare.</p></li>
+<li><p><strong>Three-way ``cmp`` functions</strong>: <code class="docutils literal notranslate"><span class="pre">cmp()</span></code>. It returns 1 when the first argument is greater than the second argument, -1 when the first argument is less than the second argument, and 0 when the two arguments are equal. It is the old style of comparison in early version of Python 2.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">calcpy</span></code> provides APIs to convert among these three types of comparers.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.eq_to_key">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">eq_to_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq=&lt;built-in</span> <span class="pre">function</span> <span class="pre">eq&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#eq_to_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.eq_to_key" title="Link to this definition">¶</a></dt>
+<dd><p>Convert an equality function to a key function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<em>callable</em>) – A function that takes two at least arguments and
+returns True if the arguments are equal, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>callable</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is experimental and may change in the future.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.ne_to_key">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">ne_to_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ne=&lt;built-in</span> <span class="pre">function</span> <span class="pre">ne&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#ne_to_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.ne_to_key" title="Link to this definition">¶</a></dt>
+<dd><p>Convert an equality function to a key function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<em>callable</em>) – A function that takes two arguments and
+returns True if the arguments are equal, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>callable</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is experimental and may change in the future.</p>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.lt_to_key">
 <span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">lt_to_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lt=&lt;built-in</span> <span class="pre">function</span> <span class="pre">lt&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#lt_to_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.lt_to_key" title="Link to this definition">¶</a></dt>
@@ -470,6 +409,37 @@ returns True if the first is greater than or equal to the second, False otherwis
 <dt>mycmp</dt><dd><p>Function that compares two objects.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.key_to_cmp">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">key_to_cmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#key_to_cmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.key_to_cmp" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a key function to a comparison function.
+The comparison function will compare two objects based on the key function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>callable</em>) – A function that takes an object and returns a value that can be compared.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A comparison function that takes two objects and</dt><dd><p>returns 1 if the first is greater than or equal to the second,
+-1 if the first is less than the second, and 0 if they are equal.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span> <span class="o">=</span> <span class="n">key_to_cmp</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;Python&quot;</span><span class="p">)</span>
+<span class="go">-1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -606,6 +576,82 @@ returns True if the first is greater than or equal to the second, False otherwis
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span> <span class="o">=</span> <span class="n">key_to_ge</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">)</span>
 <span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.eq_to_cmp">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">eq_to_cmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq=&lt;built-in</span> <span class="pre">function</span> <span class="pre">eq&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#eq_to_cmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.eq_to_cmp" title="Link to this definition">¶</a></dt>
+<dd><p>Convert an equality function to a comparison function.</p>
+<p>The comparison function will return 0 if the two objects are equal, and 1 otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<em>callable</em>) – A function that takes at least two arguments and
+returns True if the first two arguments are equal, False otherwise.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A comparison function that takes two objects and</dt><dd><p>returns 1 if the first is greater than or equal to the second,
+-1 if the first is less than the second, and 0 if they are equal.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is experimental and may be changed in the future.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span> <span class="o">=</span> <span class="n">eq_to_cmp</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.ne_to_cmp">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">ne_to_cmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ne=&lt;built-in</span> <span class="pre">function</span> <span class="pre">ne&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_cmp.html#ne_to_cmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.ne_to_cmp" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a non-equality function to a comparison function.</p>
+<p>The comparison function will return 0 if the two objects are not equal, and 1 otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ne</strong> (<em>callable</em>) – A function that takes two arguments and
+returns True if the first two arguments are not equal, False otherwise.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A comparison function that takes two objects and</dt><dd><p>returns 1 if the first is greater than or equal to the second,
+-1 if the first is less than the second, and 0 if they are equal.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is experimental and may be changed in the future.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span> <span class="o">=</span> <span class="n">ne_to_cmp</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmp</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -883,13 +929,11 @@ returns -1, 0, or 1 when the first is less than, equal to, or greater than the s
 </section>
 <section id="matcher-experimental">
 <span id="matcher"></span><h2>Matcher (Experimental)<a class="headerlink" href="#matcher-experimental" title="Link to this heading">¶</a></h2>
-<p>The <cite>matcher</cite> parameter is used to customize the comparison function.</p>
-<p>We provide some binary functions to check the equality of two objects. Especially, <a class="reference internal" href="nppd.html#calcpy.overall_equal" title="calcpy.overall_equal"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcpy.overall_equal()</span></code></a> compares two objects as a whole. It behaves like <code class="docutils literal notranslate"><span class="pre">np.array_equal()</span></code> for <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>, and behaves like <code class="docutils literal notranslate"><span class="pre">loper.equals(roper)</span></code> for <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> and <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>.</p>
-<p>We also provide a class <code class="docutils literal notranslate"><span class="pre">calcpy.matcher.PandasFrameMatcher</span></code> for comparing <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>’s.</p>
+<p>We also provide a class <code class="docutils literal notranslate"><span class="pre">calcpy.matcher.PandasFrameMatcher</span></code> for comparing <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>’s. It can be passed to the parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> for set-operation APIs in <code class="docutils literal notranslate"><span class="pre">calcpy</span></code>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="calcpy.matcher.PandasFrameMatcher">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calcpy.matcher.</span></span><span class="sig-name descname"><span class="pre">PandasFrameMatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/matcher.html#PandasFrameMatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.matcher.PandasFrameMatcher" title="Link to this definition">¶</a></dt>
-<dd><p>Matcher class for pd.DataFrame.</p>
+<dd><p>Auxiliary class for <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> and <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -954,34 +998,32 @@ Only used when <code class="docutils literal notranslate"><span class="pre">meth
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">Comparers</a><ul>
-<li><a class="reference internal" href="#inequality-comparers">Inequality Comparers</a><ul>
+<li><a class="reference internal" href="#rational-comparers">Rational Comparers</a><ul>
+<li><a class="reference internal" href="#calcpy.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.ne"><code class="docutils literal notranslate"><span class="pre">ne()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.lt"><code class="docutils literal notranslate"><span class="pre">lt()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.le"><code class="docutils literal notranslate"><span class="pre">le()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.ge"><code class="docutils literal notranslate"><span class="pre">ge()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.gt"><code class="docutils literal notranslate"><span class="pre">gt()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#equality-comparers">Equality Comparers</a><ul>
-<li><a class="reference internal" href="#calcpy.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
-<li><a class="reference internal" href="#calcpy.ne"><code class="docutils literal notranslate"><span class="pre">ne()</span></code></a></li>
-<li><a class="reference internal" href="#calcpy.same"><code class="docutils literal notranslate"><span class="pre">same()</span></code></a></li>
-<li><a class="reference internal" href="#calcpy.distinct"><code class="docutils literal notranslate"><span class="pre">distinct()</span></code></a></li>
-<li><a class="reference internal" href="#calcpy.unique"><code class="docutils literal notranslate"><span class="pre">unique()</span></code></a></li>
-<li><a class="reference internal" href="#calcpy.count_unique"><code class="docutils literal notranslate"><span class="pre">count_unique()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#convert-among-comparers">Convert among Comparers</a><ul>
+<li><a class="reference internal" href="#calcpy.eq_to_key"><code class="docutils literal notranslate"><span class="pre">eq_to_key()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.ne_to_key"><code class="docutils literal notranslate"><span class="pre">ne_to_key()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.lt_to_key"><code class="docutils literal notranslate"><span class="pre">lt_to_key()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.le_to_key"><code class="docutils literal notranslate"><span class="pre">le_to_key()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.gt_to_key"><code class="docutils literal notranslate"><span class="pre">gt_to_key()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.ge_to_key"><code class="docutils literal notranslate"><span class="pre">ge_to_key()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.cmp_to_key"><code class="docutils literal notranslate"><span class="pre">cmp_to_key()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.key_to_cmp"><code class="docutils literal notranslate"><span class="pre">key_to_cmp()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_eq"><code class="docutils literal notranslate"><span class="pre">key_to_eq()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_ne"><code class="docutils literal notranslate"><span class="pre">key_to_ne()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_lt"><code class="docutils literal notranslate"><span class="pre">key_to_lt()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_le"><code class="docutils literal notranslate"><span class="pre">key_to_le()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_gt"><code class="docutils literal notranslate"><span class="pre">key_to_gt()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.key_to_ge"><code class="docutils literal notranslate"><span class="pre">key_to_ge()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.eq_to_cmp"><code class="docutils literal notranslate"><span class="pre">eq_to_cmp()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.ne_to_cmp"><code class="docutils literal notranslate"><span class="pre">ne_to_cmp()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.lt_to_cmp"><code class="docutils literal notranslate"><span class="pre">lt_to_cmp()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.le_to_cmp"><code class="docutils literal notranslate"><span class="pre">le_to_cmp()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.ge_to_cmp"><code class="docutils literal notranslate"><span class="pre">ge_to_cmp()</span></code></a></li>
@@ -1010,8 +1052,8 @@ Only used when <code class="docutils literal notranslate"><span class="pre">meth
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="set.html"
-                          title="next chapter">Set Operations</a></p>
+    <p class="topless"><a href="order.html"
+                          title="next chapter">Order Theory</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -1041,7 +1083,7 @@ Only used when <code class="docutils literal notranslate"><span class="pre">meth
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="set.html" title="Set Operations"
+          <a href="order.html" title="Order Theory"
              >next</a> |</li>
         <li class="right" >
           <a href="fill.html" title="Output Decorators"

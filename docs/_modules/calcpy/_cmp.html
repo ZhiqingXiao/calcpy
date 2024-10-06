@@ -35,6 +35,8 @@
 <span class="kn">import</span> <span class="nn">operator</span>
 
 
+<div class="viewcode-block" id="key_to_cmp">
+<a class="viewcode-back" href="../../cmp.html#calcpy.key_to_cmp">[docs]</a>
 <span class="k">def</span> <span class="nf">key_to_cmp</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a key function to a comparison function.</span>
 <span class="sd">    The comparison function will compare two objects based on the key function.</span>
@@ -65,9 +67,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">result</span>
-    <span class="k">return</span> <span class="n">cmp</span>
+    <span class="k">return</span> <span class="n">cmp</span></div>
 
 
+
+<div class="viewcode-block" id="eq_to_cmp">
+<a class="viewcode-back" href="../../cmp.html#calcpy.eq_to_cmp">[docs]</a>
 <span class="k">def</span> <span class="nf">eq_to_cmp</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an equality function to a comparison function.</span>
 
@@ -83,7 +88,7 @@
 <span class="sd">            -1 if the first is less than the second, and 0 if they are equal.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        This function is experimental and may change in the future.</span>
+<span class="sd">        This function is experimental and may be changed in the future.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; cmp = eq_to_cmp(operator.eq)</span>
@@ -96,9 +101,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">cmp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cmp</span>
+    <span class="k">return</span> <span class="n">cmp</span></div>
 
 
+
+<div class="viewcode-block" id="ne_to_cmp">
+<a class="viewcode-back" href="../../cmp.html#calcpy.ne_to_cmp">[docs]</a>
 <span class="k">def</span> <span class="nf">ne_to_cmp</span><span class="p">(</span><span class="n">ne</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a non-equality function to a comparison function.</span>
 
@@ -114,7 +122,7 @@
 <span class="sd">            -1 if the first is less than the second, and 0 if they are equal.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        This function is experimental and may change in the future.</span>
+<span class="sd">        This function is experimental and may be changed in the future.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; cmp = ne_to_cmp(operator.ne)</span>
@@ -127,7 +135,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">cmp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">ne</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cmp</span>
+    <span class="k">return</span> <span class="n">cmp</span></div>
+
 
 
 <div class="viewcode-block" id="lt_to_cmp">
@@ -266,6 +275,8 @@
 
 
 
+<div class="viewcode-block" id="eq_to_key">
+<a class="viewcode-back" href="../../cmp.html#calcpy.eq_to_key">[docs]</a>
 <span class="k">def</span> <span class="nf">eq_to_key</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an equality function to a key function.</span>
 
@@ -275,12 +286,18 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        callable:</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is experimental and may change in the future.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cmp</span> <span class="o">=</span> <span class="n">eq_to_cmp</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">cmp_to_key</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">key</span></div>
 
 
+
+<div class="viewcode-block" id="ne_to_key">
+<a class="viewcode-back" href="../../cmp.html#calcpy.ne_to_key">[docs]</a>
 <span class="k">def</span> <span class="nf">ne_to_key</span><span class="p">(</span><span class="n">ne</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an equality function to a key function.</span>
 
@@ -296,7 +313,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cmp</span> <span class="o">=</span> <span class="n">ne_to_cmp</span><span class="p">(</span><span class="n">ne</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">cmp_to_key</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">key</span></div>
+
 
 
 <div class="viewcode-block" id="lt_to_key">

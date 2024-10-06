@@ -36,7 +36,7 @@ def _extend(frame, labels=None, index=None, columns=None, axis=None, mode="exten
 def extend(frame, /, labels=None, *, index=None, columns=None, axis=None, **kwargs):
     """Add index values if the index values are not present.
 
-    The API is simliar to ``pd.DataFrame.reindex()``.
+    This API is simliar to ``pd.DataFrame.reindex()``.
 
     Parameters:
         frame (pd.Series | pd.DataFrame): Input data.
@@ -78,7 +78,7 @@ def prioritize(frame, /, labels=None, *, index=None, columns=None, axis=None, **
     If the index is already in the index, the index will be moved to the begining.
     If the index is not in the index, the index will be added to the index.
 
-    The API is simliar to ``pd.Series.reindex()`` and ``pd.DataFrame.reindex()``.
+    This API is simliar to ``pd.Series.reindex()`` and ``pd.DataFrame.reindex()``.
 
     Parameters:
         frame (pd.Series | pd.DataFrame): Input data.

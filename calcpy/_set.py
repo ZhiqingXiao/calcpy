@@ -113,14 +113,20 @@ def _wrapper_1dict(fun):
     return f
 
 
+def _contains(seq, obj, matcher):
+    for element in seq:
+        if matcher.eq(obj, element):
+            return True
+    else:
+        return False
+
+
 def _intersection2(loper, roper, key=None, matcher=None):
     matcher = _get_matcher(loper, key=key, matcher=matcher)
     results = []
     for l in loper:  # noqa: E741
-        for r in roper:
-            if matcher.eq(l, r):
-                results.append(l)
-                break
+        if _contains(roper, l, matcher=matcher):
+            results.append(l)
     return results
 
 
@@ -128,10 +134,7 @@ def _difference2(loper, roper, key=None, matcher=None):
     matcher = _get_matcher(loper, key=key, matcher=matcher)
     results = []
     for l in loper:  # noqa: E741
-        for r in roper:
-            if matcher.eq(l, r):
-                break
-        else:
+        if not _contains(roper, l, matcher=matcher):
             results.append(l)
     return results
 
@@ -142,20 +145,56 @@ def _symmetric_difference2(loper, roper, matcher):
 
 def _issubset2(loper, roper, matcher):
     for l in loper:  # noqa: E741
-        for r in roper:
-            if matcher.eq(l, r):
-                break
-        else:
+        if not _contains(roper, l, matcher=matcher):
             return False
     return True
 
 
 def _issuperset2(loper, roper, matcher):
     for r in roper:
-        for l in loper:  # noqa: E741
-            if matcher.eq(l, r):
-                break
-        else:
+        if not _contains(loper, r, matcher=matcher):
+            return False
+    return True
+
+
+def _ispropersubset2(loper, roper, matcher):
+    return _issubset2(loper, roper, matcher) and not _issuperset2(loper, roper, matcher)
+
+
+def _ispropersuperset2(loper, roper, matcher):
+    return _issuperset2(loper, roper, matcher) and not _issubset2(loper, roper, matcher)
+
+
+def contains(values, /, *args, key=None):
+    """Check if the first parameter contains the follow-up parameters.
+
+    Parameters:
+        values (str | bytes | bytearray | (list | tuple | pd.Series)[str]):
+        *args
+        key (callable, optional)
+
+    Returns:
+        bool:
+
+    Examples:
+        >>> contains([1, 2])   # return True when no elements to check
+        True
+        >>> contains([1, 2], 1)
+        True
+        >>> contains([1, 2], 3)
+        False
+        >>> contains([1, 2], 1, 2)
+        True
+        >>> contains([1, 2], 1, 2, 2)
+        True
+        >>> contains({'a': 1, 'b': 2}, 'a', 'b')
+        True
+        >>> contains({'a': 1, 'b': 2}, 'a', 'c')
+        False
+    """
+    matcher = _get_matcher(values, key=key)
+    for arg in args:
+        if not _contains(values, arg, matcher=matcher):
             return False
     return True
 
@@ -289,4 +328,48 @@ issuperset.__doc__ = \
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#frozenset.issuperset
+    """
+
+ispropersubset = _allpairwise_wrapper(_ispropersubset2)
+ispropersubset.__doc__ = \
+    """Check if the parameter is a proper subset of the follow-up parameter.
+
+    Parameters:
+        *args
+        key (callable)
+
+    Returns:
+        bool:
+
+    Examples:
+        >>> ispropersubset([1, 2, 3], [1, 2, 3, 4, 5])
+        True
+        >>> ispropersubset([], [1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5])
+        True
+        >>> ispropersubset([1, 2, 3], [1, 5, 6])
+        False
+        >>> ispropersubset([1, 2, 3], [1, 2, 3])
+        False
+    """
+
+ispropersuperset = _allpairwise_wrapper(_ispropersuperset2)
+ispropersuperset.__doc__ = \
+    """Check if the parameter is a proper superset of the follow-up parameter.
+
+    Parameters:
+        *args
+        key (callable)
+
+    Returns:
+        bool:
+
+    Examples:
+        >>> ispropersuperset([1, 2, 3, 4, 5], [1, 2, 3])
+        True
+        >>> ispropersuperset([1, 2, 3, 4, 5], [1, 2, 3, 4], [1, 2, 3], [])
+        True
+        >>> ispropersuperset([1, 2, 3], [4, 5, 6])
+        False
+        >>> ispropersuperset([1, 2, 3], [1, 2, 3])
+        False
     """

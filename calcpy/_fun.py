@@ -1,56 +1,4 @@
-from ._seq import cycleperm
-
-
-class cyclepermcaller:
-    """Callable that swaps position parameters according to cyclc notation.
-
-    Parameters:
-        f (callable):
-        cycle (list | tuple): List of indices to swap.
-
-    Returns:
-        callable:
-
-    Examples:
-        >>> executor = cyclepermcaller(range, cycle=[0, 1])
-        >>> executor(3, 2, 6)
-        range(2, 3, 6)
-
-        >>> executor = cyclepermcaller(range, cycle=[1, 2])
-        >>> executor(3, 2, 6)
-        range(3, 6, 2)
-    """
-    def __init__(self, f, /, cycle=()):
-        self.f = f
-        self.cycle = cycle
-
-    def __call__(self, *args, **kwargs):
-        args = cycleperm(list(args), cycle=self.cycle)
-        return self.f(*args, **kwargs)
-
-
-class swapcaller(cyclepermcaller):
-    """Callable that swaps positional arguments in a pair.
-
-    Parameters:
-        f (callable):
-        i (int): Index of the argument to swap.
-        j (int): Index of another argument to swap.
-
-    Returns:
-        callable:
-
-    Examples:
-        >>> executor = swapcaller(range)
-        >>> executor(3, 2, 6)
-        range(2, 3, 6)
-
-        >>> executor = swapcaller(range, i=1, j=2)
-        >>> executor(3, 2, 6)
-        range(3, 6, 2)
-    """
-    def __init__(self, f, /, i=0, j=1):
-        super().__init__(f, cycle=[i, j])
+from functools import wraps
 
 
 def call(f, *args, **kwargs):
@@ -71,63 +19,42 @@ def call(f, *args, **kwargs):
     return f(*args, **kwargs)
 
 
-def merge_args(f, /):
-    """Merge all positional arguments of a function to a single tuple argument
+def curry(*args, **kwargs):
+    """Fill arguments of a callable.
+
+    If you want to fill positional arguments in the middle without filling argumetns in the begining,
+    you can use ``prioritize()`` to move those positional parameter to the beginning,
+    and then fill them using this ``curry()``.
 
     Parameters:
-        f (callable):
+        args (tuple): Positional arguments to fill.
+        kwargs (dict): Keyword arguments to fill.
 
     Returns:
-        callable:
+        Callable[callable, callable]:
 
     Examples:
-        >>> merge_args(print)([0, 1.0, "Hello"])
-        0 1.0 Hello
+        Use as a decorator:
+
+        >>> @curry(2, 3)
+        ... def muladd(a, b, c):
+        ...     return a * b + c
+        >>> muladd(4)
+        10
+
+        Use as a decorator, together with ``prioritize()``:
+
+        >>> from calcpy.fun import prioritize
+        >>> @curry(2, 3)
+        ... @prioritize(-2, -1)
+        ... def muladd(a, b, c):
+        ...     return a * b + c
+        >>> muladd(4)
+        14
     """
-    def fun(args, **kwargs):
-        return f(*args, **kwargs)
-    return fun
-
-
-def demerge_args(f, /):
-    """Replace a single tuple/list argument to many positional arguments.
-
-    Parameters:
-        f (callable):
-
-    Returns:
-        callable:
-
-    Examples:
-        >>> demerge_args(all)(True, True, True)
-        True
-    """
-    def fun(*args, **kwargs):
-        return f(args, **kwargs)
-    return fun
-
-
-def skewer(*callables):
-    """Composite multiple callables into one callable.
-
-    Parameters:
-        *callables (callable):
-
-    Returns:
-        callable: A callable that calls all callables in order.
-
-    Examples:
-        >>> def minmax(x, y):
-        ...     return min(x, y), max(x, y)
-        >>> def mul(x, y):
-        ...     return x * y
-        >>> skewered = skewer(minmax, mul)
-        >>> skewered(5, 3)
-        15
-    """
-    def fun(*args, **kwargs):
-        result = args
-        for callable in callables:
-            result = callable(*result, **kwargs)
-        return result
-    return fun
+    def wrapper(f):
+        @wraps(f)
+        def fun(*arguments, **keywordarguments):
+            return f(*args, *arguments, **kwargs, **keywordarguments)
+        return fun
+    return wrapper

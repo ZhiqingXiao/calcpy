@@ -52,7 +52,7 @@ class NumpyArrayMatcher(SimpleMatcher):
 
 
 class PandasFrameMatcher(Matcher):
-    """Matcher class for pd.DataFrame.
+    """Auxiliary class for ``pd.Series`` and ``pd.DataFrame``.
 
     Parameters:
         method (str): can be ``"object"``, ``"series"``, ``"index"``.
