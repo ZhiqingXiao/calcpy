@@ -1,7 +1,44 @@
 from collections import defaultdict, deque
+import operator
+from sys import maxsize
 
 
-def A276128(n):
+def min_repetend_len(args, allow_frac=True, matcher=None):
+    """ Get minimum length of repetends.
+
+    Parameters
+    ----------
+    args: list       a list of values as a sequence
+    allow_freq: bool=True        allow partial repetend at the end of sequence
+    matcher: Optional[callable]=None       use to determine whether two values are the same
+
+    Results
+    -------
+    length: int     the minimum legnth of repetends.
+
+    Usage Example
+    -------------
+    from calc.sequence import min_repetend_len
+    min_repetend_len([1, 1, 1, 1])  # 1
+    min_repetend_len([1, 2, 1, 2])  # 2
+    min_repetend_len([1, 2, 1, 3])  # 4
+    min_repetend_len([1, 2, 1, 3, 1, 2, 1, 3])  # 4
+    min_repetend_len([1, 2, 1, 2, 1, 2, 1], allow_frac=False)  # 7
+    """
+    length = len(args)
+    matcher = matcher or operator.eq
+    for l in range(1, length):
+        if (not allow_frac) and (length % l > 0):
+            continue
+        for i in range(length-l):
+            if not matcher(args[i], args[i+l]):
+                break
+        else:
+            return l
+    return length
+
+
+def A276128(n=maxsize):
     """ Generate OEIS sequence A276128
 
     Paramater
