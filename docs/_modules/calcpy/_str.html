@@ -32,7 +32,9 @@
             
   <h1>Source code for calcpy._str</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">keyword</span> <span class="kn">import</span> <span class="n">iskeyword</span> <span class="k">as</span> <span class="n">_iskeyword</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">isinf</span>
 <span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">wrap</span><span class="p">,</span> <span class="n">fill</span><span class="p">,</span> <span class="n">shorten</span><span class="p">,</span> <span class="n">dedent</span><span class="p">,</span> <span class="n">indent</span>  <span class="c1"># noqa: F401</span>
 
@@ -40,13 +42,11 @@
 
 <span class="kn">from</span> <span class="nn">._nppd</span> <span class="kn">import</span> <span class="n">broadcast_first</span>
 <span class="kn">from</span> <span class="nn">._op</span> <span class="kn">import</span> <span class="n">methodcaller</span>
-<span class="kn">from</span> <span class="nn">.pd</span> <span class="kn">import</span> <span class="n">NDFrame</span>
-
-<span class="n">strlike_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">NDFrame</span><span class="p">,</span> <span class="n">ListLike</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">,</span> <span class="n">StrListLike</span>
 
 
 <span class="k">def</span> <span class="nf">_pdseries_apply</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">):</span>
         <span class="n">fun</span> <span class="o">=</span> <span class="n">methodcaller</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -60,16 +60,16 @@
 
 
 <span class="k">def</span> <span class="nf">_elementwise_apply</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">fun</span> <span class="o">=</span> <span class="n">methodcaller</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">broadcast_first</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_apply_via_pd</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">arg</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ListLike</span><span class="p">):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">NDFrame</span><span class="p">):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">arg</span>
@@ -78,19 +78,20 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">_pdframe_apply</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ListLike</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)(</span><span class="n">results</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">results</span>
 
 
 <span class="k">def</span> <span class="nf">_apply_via_str_or_pd</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">c</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)(</span><span class="n">c</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">StrListLike</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">c</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)(</span><span class="n">c</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">NDFrame</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_pdframe_apply</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;str.&quot;</span> <span class="o">+</span> <span class="n">attrname</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
@@ -122,6 +123,35 @@
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.capitalize</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_apply_via_str_or_pd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;capitalize&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="capwords">
+<a class="viewcode-back" href="../../str.html#calcpy.str.capwords">[docs]</a>
+<span class="k">def</span> <span class="nf">capwords</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capitalize the first character of each word in the string.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        value (str | bytes | bytearray | (list | tuple | pd.Series)[str]):</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | bytes | bytearray | (list | tuple | pd.Series)[str]:</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; capwords(&quot;hello world&quot;)</span>
+<span class="sd">        &#39;Hello World&#39;</span>
+<span class="sd">        &gt;&gt;&gt; capwords([&quot;hello&quot;, &quot;world&quot;])</span>
+<span class="sd">        [&#39;Hello&#39;, &#39;World&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; capwords(pd.Series([&quot;hello&quot;, &quot;world&quot;]))</span>
+<span class="sd">        0    Hello</span>
+<span class="sd">        1    World</span>
+<span class="sd">        dtype: object</span>
+
+<span class="sd">    See also:</span>
+<span class="sd">        https://docs.python.org/3/library/string.html#string.capwords</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_elementwise_apply</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">capwords</span><span class="p">)</span></div>
 
 
 
@@ -862,7 +892,7 @@
 <span class="sd">        fillchar (str):</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        bool | pd.Series | pd.DataFrame:</span>
+<span class="sd">        str | pd.Series | pd.DataFrame:</span>
 
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.ljust</span>
@@ -880,7 +910,7 @@
 <span class="sd">        value (str | bytes | bytearray | list | tuple | pd.Series | pd.DataFrame):</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        bool | pd.Series | pd.DataFrame:</span>
+<span class="sd">        str | pd.Series | pd.DataFrame:</span>
 
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.lower</span>
@@ -899,7 +929,7 @@
 <span class="sd">        chars (str):</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        bool | pd.Series | pd.DataFrame:</span>
+<span class="sd">        str | pd.Series | pd.DataFrame:</span>
 
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.lstrip</span>
@@ -981,21 +1011,44 @@
 
 
 
+<span class="k">def</span> <span class="nf">_replace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">inf</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">pat</span><span class="p">,</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">replacement</span><span class="p">):</span>
+                <span class="n">replaced</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">replaced</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">position</span> <span class="o">:=</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">new_text</span> <span class="o">=</span> <span class="n">replacement</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">position</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_text</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">position</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">):]</span>
+                    <span class="n">position</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_text</span><span class="p">)</span>
+                    <span class="n">replaced</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">isinf</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+
 <div class="viewcode-block" id="replace">
 <a class="viewcode-back" href="../../str.html#calcpy.str.replace">[docs]</a>
-<span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">inf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;replace</span>
-
-<span class="sd">    We use the signature of built-in ``str`` methods. It differs from ``pd.Series.str.replace()``.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        value (str | list[str] | tuple[str] | pd.Series[str]): string to replace</span>
-<span class="sd">        old (str): old string</span>
-<span class="sd">        new (str): new string</span>
-<span class="sd">        count (int): count</span>
+<span class="sd">        pattern (str | dict): old string, or a dict from old string to new string</span>
+<span class="sd">        new (str | None): new string if ``pattern`` is the old string</span>
+<span class="sd">        count (int | inf): maximum number of replacements.</span>
+<span class="sd">            Default value (inf) means do not limit the number of replacements.</span>
+<span class="sd">            0 means disabling replacements.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        string replaced.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        The parameters differ from either the built-in ``str.replace`` method or ``pd.Series.str.replace`` method.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; replace(&#39;Hello World&#39;, &#39;World&#39;, &#39;Earth&#39;)</span>
@@ -1007,11 +1060,15 @@
 <span class="sd">        0    Hello</span>
 <span class="sd">        1    Earth</span>
 <span class="sd">        dtype: object</span>
+<span class="sd">        &gt;&gt;&gt; replace(&#39;aaaa&#39;, {&#39;a&#39;: &#39;b&#39;}, count=0)</span>
+<span class="sd">        &#39;aaaa&#39;</span>
+<span class="sd">        &gt;&gt;&gt; replace(&#39;aaaa&#39;, {&#39;a&#39;: &#39;b&#39;}, count=2)</span>
+<span class="sd">        &#39;bbaa&#39;</span>
 
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.replace</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_elementwise_apply</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;replace&quot;</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_elementwise_apply</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_replace</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span></div>
 
 
 
@@ -1129,7 +1186,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        s (str | pd.Series): string to split</span>
-<span class="sd">        sep (Optional[str]): separator. By default split on whitespace</span>
+<span class="sd">        sep (str, optional): separator. By default split on whitespace</span>
 <span class="sd">        maxsplit (int): maximum number of splits</span>
 <span class="sd">        minsplit (int): minimum number of splits</span>
 <span class="sd">        fillvalue (Optional): fill value if not enough splits</span>
@@ -1170,7 +1227,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        value (str | pd.Series): string to split</span>
-<span class="sd">        sep (Optional[str]): separator. By default split on whitespace</span>
+<span class="sd">        sep (str, optional): separator. By default split on whitespace</span>
 <span class="sd">        maxsplit (int): maximum number of splits</span>
 <span class="sd">        minsplit (int): minimum number of splits</span>
 <span class="sd">        fillvalue (Optional): fill value if not enough splits</span>
@@ -1249,6 +1306,61 @@
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#str.swapcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_apply_via_str_or_pd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;swapcase&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_sub</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># no change allowed</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">isinf</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>  <span class="c1"># no limits on change number</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">pat</span><span class="p">,</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="sub">
+<a class="viewcode-back" href="../../str.html#calcpy.str.sub">[docs]</a>
+<span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">inf</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace using regex.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        value (str | list[str] | tuple[str] | pd.Series[str]): string to replace</span>
+<span class="sd">        pattern (str | dict): old pattern, or a dict from old string to new string</span>
+<span class="sd">        new (str | None): new string if ``pattern`` is the old string</span>
+<span class="sd">        count (int | inf): maximum number of replacements.</span>
+<span class="sd">            By default, there is no limit on the number of replacements.</span>
+<span class="sd">            0 means disabling replacements.</span>
+<span class="sd">        flags (re.RegexFlag):</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string replaced.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        The parameters differ from the built-in ``re.sub`` method.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; sub(&#39;Hello World&#39;, &#39;World&#39;, &#39;Earth&#39;)</span>
+<span class="sd">        &#39;Hello Earth&#39;</span>
+<span class="sd">        &gt;&gt;&gt; sub([&#39;Hello&#39;, &#39;World&#39;], &#39;World&#39;, &#39;Earth&#39;)</span>
+<span class="sd">        [&#39;Hello&#39;, &#39;Earth&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; sub(pd.Series([&#39;Hello&#39;, &#39;World&#39;]), &#39;World&#39;, &#39;Earth&#39;)</span>
+<span class="sd">        0    Hello</span>
+<span class="sd">        1    Earth</span>
+<span class="sd">        dtype: object</span>
+<span class="sd">        &gt;&gt;&gt; sub(&#39;aaaa&#39;, {&#39;a&#39;: &#39;b&#39;}, count=0)</span>
+<span class="sd">        &#39;aaaa&#39;</span>
+<span class="sd">        &gt;&gt;&gt; sub(&#39;aaaa&#39;, {&#39;a&#39;: &#39;b&#39;}, count=2)</span>
+<span class="sd">        &#39;bbaa&#39;</span>
+
+<span class="sd">    See also:</span>
+<span class="sd">        https://docs.python.org/3/library/re.html#re.sub</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_elementwise_apply</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_sub</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span></div>
 
 
 

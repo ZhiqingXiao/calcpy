@@ -357,6 +357,36 @@ The default is <code class="docutils literal notranslate"><span class="pre">None
 <p><a class="reference internal" href="builtin.html#calcpy.xor" title="calcpy.xor"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calcpy.xor()</span></code></a></p>
 <p><code class="xref py py-meth docutils literal notranslate"><span class="pre">calcpy.zip_()</span></code>: adapted from <a class="reference external" href="https://docs.python.org/3/library/functions.html#zip">zip()</a>.</p>
 </section>
+<section id="chained-composition">
+<h2>Chained Composition<a class="headerlink" href="#chained-composition" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.skewer">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">skewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">callables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_fun.html#skewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.skewer" title="Link to this definition">¶</a></dt>
+<dd><p>Composite multiple callables into one callable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*callables</strong> (<em>callable</em>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A callable that calls all callables in order.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">minmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">skewered</span> <span class="o">=</span> <span class="n">skewer</span><span class="p">(</span><span class="n">minmax</span><span class="p">,</span> <span class="n">mul</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">skewered</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">15</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -391,6 +421,10 @@ The default is <code class="docutils literal notranslate"><span class="pre">None
 </ul>
 </li>
 <li><a class="reference internal" href="#shorthand-functions-that-support-composition">Shorthand Functions that Support Composition</a></li>
+<li><a class="reference internal" href="#chained-composition">Chained Composition</a><ul>
+<li><a class="reference internal" href="#calcpy.skewer"><code class="docutils literal notranslate"><span class="pre">skewer()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

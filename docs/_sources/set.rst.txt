@@ -11,7 +11,7 @@ The extended APIs have the following features:
 
 - **Support multiple arguments**: Most operations can take any number of arguments.
 
-- **Support customizable comparison**: You can provide custom comparison functions via a keyword parameter ``matcher``. See :ref:`matcher` for details.
+- **Support customizable comparison**: You can provide customed comparison functions via the keyword parameter ``key``.
 
 
 --------------
@@ -61,14 +61,13 @@ This differs from Python's dictionary union operator (|), which would use the va
 
 **Intersection and Difference with Dictionaries:**
 When using ``intersection()`` and ``difference()`` with dictionaries, the operations are performed on the dictionary keys. For example:
-When the first argument is a ``dict`` and subsequent arguments are ``list``s, ``intersection()`` and ``difference()`` operate on the dictionary keys:
+When the first argument is a ``dict`` and subsequent arguments are ``list`` s, ``intersection()`` and ``difference()`` operate on the dictionary keys:
 
 .. code:: python
 
     >>> from calcpy import intersection, difference
     >>> intersection({"a": 1, "b": 2, "c": 3}, ["a", "b", "d"])
     {"a": 1, "b": 2}
-
     >>> difference({"a": 1, "b": 2, "c": 3}, ["a"], ["d"])
     {"b": 2, "c": 3}
 

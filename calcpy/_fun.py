@@ -105,3 +105,29 @@ def demerge_args(f, /):
     def fun(*args, **kwargs):
         return f(args, **kwargs)
     return fun
+
+
+def skewer(*callables):
+    """Composite multiple callables into one callable.
+
+    Parameters:
+        *callables (callable):
+
+    Returns:
+        callable: A callable that calls all callables in order.
+
+    Examples:
+        >>> def minmax(x, y):
+        ...     return min(x, y), max(x, y)
+        >>> def mul(x, y):
+        ...     return x * y
+        >>> skewered = skewer(minmax, mul)
+        >>> skewered(5, 3)
+        15
+    """
+    def fun(*args, **kwargs):
+        result = args
+        for callable in callables:
+            result = callable(*result, **kwargs)
+        return result
+    return fun

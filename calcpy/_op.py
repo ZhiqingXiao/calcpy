@@ -3,8 +3,8 @@ from copy import copy as shallowcopy, deepcopy
 import functools
 import operator
 
-from ._it import pairwise, allpairwise_call
 from .matcher import _get_matcher
+from ._it import pairwise
 from ._seq import count_unique
 
 
@@ -18,7 +18,7 @@ def _resolve_attr(obj, attr, default):
     return obj
 
 
-def attrgetter(*items, default=None):
+def attrgetter(*attrs, default=None):
     """Return a callable object that fetches the given attribute(s) from its operand.
 
     Fully compatible with Python's built-in ``operator.attrgetter``,
@@ -41,15 +41,15 @@ def attrgetter(*items, default=None):
     See also:
         https://docs.python.org/3/library/operator.html#operator.attrgetter
     """
-    if len(items) == 1:
-        attr = items[0]
+    if len(attrs) == 1:
+        attr = attrs[0]
 
         def g(obj):
             return _resolve_attr(obj, attr, default)
     else:
 
         def g(obj):
-            return tuple(_resolve_attr(obj, attr, default) for attr in items)
+            return tuple(_resolve_attr(obj, attr, default) for attr in attrs)
     return g
 
 
@@ -121,24 +121,54 @@ def methodcaller(name, *args, **kwargs):
     return caller
 
 
-def identity(value, *args, **kwargs):
-    """Returns the first positional arguments, and ignore other arguments.
+def arggetter(*keys, default=None):
+    """Return a callable object that fetches the nth positional argument from its operand.
+
+    Parameters:
+        *keys (int | str, for each positional parameter):
+            If it is an ``int`` (can be negative), it is the index of the positional argument to be fetched.
+            If it is a ``str``, it is the name of keyword argument to be fetched.
+        default: Default value to return when the argument is not found.
+
+    Returns:
+        callable:
 
     Examples:
-        Return the first position parameter and ignore all other parameters.
+        Get the first positional argument.
 
-        >>> result = identity("value", "other_input", key="other_keyword_input")
-        >>> result
-        'value'
+        >>> getter = arggetter(0)
+        >>> getter("a", "b", "c", key="value")
+        'a'
 
-        The return value is as-is without copying.
+        Get the positional arguments and keyword arguments.
 
-        >>> import pandas as pd
-        >>> df = pd.DataFrame()
-        >>> identity(df) is df
-        True
+        >>> getter = arggetter(-1, 0, 1, "key", default="default")
+        >>> getter("a", "b", "c", key="value")
+        ('c', 'a', 'b', 'value')
+
+        Get the positional arguments and keyword arguments with default values.
+
+        >>> getter = arggetter(-1, 0, 1, 5, "key", "other", default="default")
+        >>> getter("a", "b", "c", key="value")
+        ('c', 'a', 'b', 'default', 'value', 'default')
     """
-    return value
+    def getter(*args, **kwargs):
+        results = []
+        for key in keys:
+            if isinstance(key, str):
+                result = kwargs.get(key, default)
+            else:
+                count = len(args)
+                if -count <= key < count:
+                    result = args[key]
+                else:
+                    result = default
+            results.append(result)
+        if len(results) == 1:
+            # If only one result, return it directly
+            return results[0]
+        return tuple(results)
+    return getter
 
 
 class constantcreator:
@@ -183,7 +213,7 @@ class constantcreator:
             else:
                 copy = deepcopy
         else:
-            copy = identity
+            copy = arggetter(0)
         self.copy = copy
 
     def __call__(self, *args, **kwargs):
@@ -421,133 +451,66 @@ def allpairwise(binop, *args, **kwargs):
     return all_(iterable, empty=True)
 
 
-"""Comparison functions that supports >=0 arguments. """
-lt = allpairwise_call(operator.lt)
-lt.__doc__ = """
-    Return ``True`` when all arguments are less than the next argument.
+def _allpairwise_glet(glet_name):
+    # glet is short for the collection of ["lt", "le", "gt", "ge"].
+    glet = getattr(operator, glet_name)
 
-    Fully compatible with Python's built-in ``operator.lt``.
+    def f(*args, key=None):
+        if key is not None:
+            args = (key(arg) for arg in args)
+        iterable = (glet(*p) for p in pairwise(args))
+        return all(iterable)
+    f.__name__ = glet_name
+    f.__doc__ = f"""
+    Return ``True`` when all arguments are {glet_name} the next argument.
+
+    Fully compatible with Python's built-in ``operator.{glet_name}``.
 
     Parameters:
         *args
+        key (callable):
 
     Returns:
         bool:
 
     Examples:
-        >>> lt()
+        >>> {glet_name}()
         True
-        >>> lt(1)
+        >>> {glet_name}(1)
         True
-        >>> lt(1, 2)
-        True
-        >>> lt(1, 2, 3)
-        True
-        >>> lt(1, 1)
-        False
-        >>> lt(1, 1, 2)
-        False
+        >>> {glet_name}(1, 1)
+        {glet(1, 1)}
+        >>> {glet_name}(1, 2)
+        {glet(1, 2)}
+        >>> {glet_name}(2, 1)
+        {glet(2, 1)}
+        >>> {glet_name}(1, 1, 2)
+        {glet(1, 1) and glet(1, 2)}
+        >>> {glet_name}(1, 2, 3)
+        {glet(1, 2) and glet(2, 3)}
+        >>> {glet_name}(3, 2, 1)
+        {glet(3, 2) and glet(2, 1)}
 
     See also:
-        https://docs.python.org/3/library/operator.html#operator.lt
+        https://docs.python.org/3/library/operator.html#operator.{glet_name}
     """
-le = allpairwise_call(operator.le)
-le.__doc__ = """
-    Return ``True`` when all arguments are less than or equal to the next argument.
-
-    Fully compatible with Python's built-in ``operator.le``.
-
-    Parameters:
-        *args
-
-    Returns:
-        bool:
-
-    Examples:
-        >>> le()
-        True
-        >>> le(1)
-        True
-        >>> le(1, 2)
-        True
-        >>> le(1, 2, 3)
-        True
-        >>> le(1, 1)
-        True
-        >>> le(1, 1, 2)
-        False
-
-    See also:
-        https://docs.python.org/3/library/operator.html#operator.le
-    """
-ge = allpairwise_call(operator.ge)
-ge.__doc__ = """
-    Return ``True`` when all arguments are greater than or equal to the next argument.
-
-    Fully compatible with Python's built-in ``operator.ge``.
-
-    Parameters:
-        *args
-
-    Returns:
-        bool:
-
-    Examples:
-        >>> ge()
-        True
-        >>> ge(1)
-        True
-        >>> ge(2, 1)
-        True
-        >>> ge(3, 2, 1)
-        True
-        >>> ge(1, 1)
-        True
-        >>> ge(2, 1, 1)
-        True
-
-    See also:
-        https://docs.python.org/3/library/operator.html#operator.ge
-    """
-gt = allpairwise_call(operator.gt)
-gt.__doc__ = """
-    Return ``True`` when all arguments are greater than the next argument.
-
-    Fully compatible with Python's built-in ``operator.gt``.
-
-    Parameters:
-        *args
-
-    Returns:
-        bool:
-
-    Examples:
-        >>> gt()
-        True
-        >>> gt(1)
-        True
-        >>> gt(2, 1)
-        True
-        >>> gt(3, 2, 1)
-        True
-        >>> gt(1, 1)
-        False
-        >>> ge(2, 1, 1)
-        False
-
-    See also:
-        https://docs.python.org/3/library/operator.html#operator.gt
-    """
+    return f
 
 
-def eq(*args, matcher=None):
+lt = _allpairwise_glet("lt")
+le = _allpairwise_glet("le")
+gt = _allpairwise_glet("gt")
+ge = _allpairwise_glet("ge")
+
+
+def eq(*args, key=None):
     """Check whether all parameters are the same.
 
     Fully compatible with Python's built-in ``operator.eq``.
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -561,18 +524,18 @@ def eq(*args, matcher=None):
     See also:
         https://docs.python.org/3/library/operator.html#operator.eq
     """
-    distinct_count = count_unique(args, matcher=matcher)
+    distinct_count = count_unique(args, key=key)
     return distinct_count <= 1
 
 
-def ne(*args, matcher=None):
+def ne(*args, key=None):
     """Check whether all parameters are distinct.
 
     Fully compatible with Python's built-in ``operator.ne``.
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -587,16 +550,16 @@ def ne(*args, matcher=None):
         https://docs.python.org/3/library/operator.html#operator.ne
     """
     original_count = len(args)
-    distinct_count = count_unique(args, matcher=matcher)
+    distinct_count = count_unique(args, key=key)
     return original_count == distinct_count
 
 
-def same(values, matcher=None):
+def same(values, key=None):
     """Check whether all elements are the same.
 
     Parameters:
         values (iterable)
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -607,15 +570,15 @@ def same(values, matcher=None):
         >>> same([1, 1, 2, 2])
         False
     """
-    return eq(*values, matcher=matcher)
+    return eq(*values, key=key)
 
 
-def distinct(values, *, matcher=None):
+def distinct(values, *, key=None):
     """Check whether all elements are distinct.
 
     Parameters:
         values (iterable)
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -626,7 +589,7 @@ def distinct(values, *, matcher=None):
         >>> distinct([[1, 2], [1, 3], [1, 3]])
         False
     """
-    return ne(*values, matcher=matcher)
+    return ne(*values, key=key)
 
 
 def _concat(*args, matcher, assemble=True):
@@ -638,18 +601,22 @@ def _concat(*args, matcher, assemble=True):
     return results
 
 
-def concat(*args, matcher=None):
+def concat(*args, key=None):
     """Concat multiple parameters.
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Examples:
         >>> concat([1, 2, 3], [], [4, 5], [5])
         [1, 2, 3, 4, 5, 5]
         >>> concat((1, 2, 3), (), (4, 5), (5,))
         (1, 2, 3, 4, 5, 5)
+        >>> concat({1, 2, 3}, set(), {4, 5}, {5})
+        {1, 2, 3, 4, 5}
+        >>> concat({1: 'a', 2: 'b'}, {}, {3: 'c', 4: 'd'}, {5: 'e'})
+        {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e'}
 
         >>> import pandas as pd
         >>> s = pd.Series([0, 1])
@@ -662,5 +629,5 @@ def concat(*args, matcher=None):
     """
     if len(args) == 0:
         raise ValueError()
-    matcher = _get_matcher(args[0], matcher=matcher)
+    matcher = _get_matcher(args[0], key=key)
     return _concat(*args, matcher=matcher)

@@ -45,17 +45,17 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.pd.extend">
 <span class="sig-prename descclassname"><span class="pre">calcpy.pd.</span></span><span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/pd.html#extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.pd.extend" title="Link to this definition">¶</a></dt>
-<dd><p>Extend the index of <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> or <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>.</p>
+<dd><p>Add index values if the index values are not present.</p>
 <p>The API is simliar to <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.reindex()</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>frame</strong> (<em>pd.Series</em><em> | </em><em>pd.DataFrame</em>) – Input data.</p></li>
-<li><p><strong>labels</strong> (<em>Optional</em>) – New labels / index to conform the axis specified by.</p></li>
-<li><p><strong>index</strong> (<em>Optional</em>) – index names.</p></li>
-<li><p><strong>columns</strong> (<em>Optional</em>) – column names.
+<li><p><strong>labels</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – New labels / index to conform the axis specified by.</p></li>
+<li><p><strong>index</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – index names.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – column names.
 only work for DataFrame.</p></li>
-<li><p><strong>axis</strong> (<em>Optional</em>) – axis to extend.
+<li><p><strong>axis</strong> (<em>int</em><em> | </em><em>str</em><em>, </em><em>optional</em>) – axis to extend.
 0: index, 1: columns.
 only work for DataFrame.</p></li>
 <li><p><strong>kwargs</strong> – keyword arguments to be passed to <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.reindex()</span></code>,
@@ -87,17 +87,19 @@ including <code class="docutils literal notranslate"><span class="pre">copy</spa
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.pd.prioritize">
 <span class="sig-prename descclassname"><span class="pre">calcpy.pd.</span></span><span class="sig-name descname"><span class="pre">prioritize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/pd.html#prioritize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.pd.prioritize" title="Link to this definition">¶</a></dt>
-<dd><p>Prioritize the index of <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> or <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>.</p>
-<p>The API is simliar to <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.reindex()</span></code>.</p>
+<dd><p>Put some index values at the begining of the index.</p>
+<p>If the index is already in the index, the index will be moved to the begining.
+If the index is not in the index, the index will be added to the index.</p>
+<p>The API is simliar to <code class="docutils literal notranslate"><span class="pre">pd.Series.reindex()</span></code> and <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.reindex()</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>frame</strong> (<em>pd.Series</em><em> | </em><em>pd.DataFrame</em>) – Input data.</p></li>
-<li><p><strong>labels</strong> (<em>Optional</em>) – New labels / index to conform the axis specified by</p></li>
-<li><p><strong>index</strong> (<em>Optional</em>) – index names</p></li>
-<li><p><strong>columns</strong> (<em>Optional</em>) – column names.
+<li><p><strong>labels</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – New labels / index to conform the axis specified by</p></li>
+<li><p><strong>index</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – index names</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – column names.
 only work for DataFrame.</p></li>
-<li><p><strong>axis</strong> (<em>Optional</em>) – axis to extend.
+<li><p><strong>axis</strong> (<em>int</em><em> | </em><em>str</em><em>, </em><em>optional</em>) – axis to extend.
 0: index, 1: columns.
 only work for DataFrame.</p></li>
 <li><p><strong>kwargs</strong> – keyword arguments to be passed to <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.reindex()</span></code>,
@@ -164,8 +166,8 @@ including <code class="docutils literal notranslate"><span class="pre">copy</spa
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>dict</em>) – Nested dict.</p></li>
-<li><p><strong>index_cols</strong> (<em>Optional</em><em>[</em><em>int</em><em> | </em><em>str</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Index names.</p></li>
-<li><p><strong>columns</strong> (<em>Optional</em><em>[</em><em>int</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Column names.</p></li>
+<li><p><strong>index_cols</strong> (<em>int</em><em> | </em><em>str</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Index names.</p></li>
+<li><p><strong>columns</strong> (<em>int</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Column names.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

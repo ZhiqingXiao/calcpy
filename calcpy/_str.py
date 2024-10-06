@@ -1,5 +1,7 @@
 from keyword import iskeyword as _iskeyword
+from math import inf, isinf
 import operator
+import re
 import string
 from textwrap import wrap, fill, shorten, dedent, indent  # noqa: F401
 
@@ -7,13 +9,11 @@ import pandas as pd
 
 from ._nppd import broadcast_first
 from ._op import methodcaller
-from .pd import NDFrame
-
-strlike_types = (str, bytes, bytearray)
+from .typing import NDFrame, ListLike, StrLike, StrListLike
 
 
 def _pdseries_apply(series, fun, *args, **kwargs):
-    if isinstance(fun, (str, bytes, bytearray)):
+    if isinstance(fun, StrLike):
         fun = methodcaller(fun)
     return fun(series, *args, **kwargs)
 
@@ -27,16 +27,16 @@ def _pdframe_apply(frame, fun, *args, **kwargs):
 
 
 def _elementwise_apply(arg, fun, *args, **kwargs):
-    if isinstance(fun, (str, bytes, bytearray)):
+    if isinstance(fun, str):
         fun = methodcaller(fun)
     f = broadcast_first(fun)
     return f(arg, *args, **kwargs)
 
 
 def _apply_via_pd(arg, attrname, *args, **kwargs):
-    if isinstance(arg, (str, bytes, bytearray)):
+    if isinstance(arg, StrLike):
         frame = pd.Series([arg])
-    elif isinstance(arg, (list, tuple)):
+    elif isinstance(arg, ListLike):
         frame = pd.Series(arg)
     elif isinstance(arg, NDFrame):
         frame = arg
@@ -45,19 +45,20 @@ def _apply_via_pd(arg, attrname, *args, **kwargs):
 
     results = _pdframe_apply(frame, attrname, *args, **kwargs)
 
-    if isinstance(arg, (str, bytes, bytearray)):
+    if isinstance(arg, StrLike):
         return results.iloc[0]
-    if isinstance(arg, (list, tuple)):
+    if isinstance(arg, ListLike):
         return type(arg)(results.tolist())
     return results
 
 
 def _apply_via_str_or_pd(arg, attrname, *args, **kwargs):
-    c = operator.methodcaller(attrname, *args, **kwargs)
-    if isinstance(arg, (str, bytes, bytearray)):
-        return c(arg)
-    if isinstance(arg, (list, tuple)):
-        return type(arg)(c(s) for s in arg)
+    if isinstance(arg, StrListLike):
+        c = operator.methodcaller(attrname, *args, **kwargs)
+        if isinstance(arg, StrLike):
+            return c(arg)
+        else:
+            return type(arg)(c(s) for s in arg)
     if isinstance(arg, NDFrame):
         return _pdframe_apply(arg, "str." + attrname, *args, **kwargs)
     raise NotImplementedError()
@@ -87,6 +88,32 @@ def capitalize(value, /):
         https://docs.python.org/3/library/stdtypes.html#str.capitalize
     """
     return _apply_via_str_or_pd(value, "capitalize")
+
+
+def capwords(value, /):
+    """Capitalize the first character of each word in the string.
+
+    Parameters:
+        value (str | bytes | bytearray | (list | tuple | pd.Series)[str]):
+
+    Returns:
+        str | bytes | bytearray | (list | tuple | pd.Series)[str]:
+
+    Examples:
+        >>> capwords("hello world")
+        'Hello World'
+        >>> capwords(["hello", "world"])
+        ['Hello', 'World']
+        >>> import pandas as pd
+        >>> capwords(pd.Series(["hello", "world"]))
+        0    Hello
+        1    World
+        dtype: object
+
+    See also:
+        https://docs.python.org/3/library/string.html#string.capwords
+    """
+    return _elementwise_apply(value, string.capwords)
 
 
 def casefold(value, /):
@@ -749,7 +776,7 @@ def ljust(value, /, width, fillchar=' '):
         fillchar (str):
 
     Returns:
-        bool | pd.Series | pd.DataFrame:
+        str | pd.Series | pd.DataFrame:
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#str.ljust
@@ -764,7 +791,7 @@ def lower(value, /):
         value (str | bytes | bytearray | list | tuple | pd.Series | pd.DataFrame):
 
     Returns:
-        bool | pd.Series | pd.DataFrame:
+        str | pd.Series | pd.DataFrame:
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#str.lower
@@ -780,7 +807,7 @@ def lstrip(value, /, chars=None):
         chars (str):
 
     Returns:
-        bool | pd.Series | pd.DataFrame:
+        str | pd.Series | pd.DataFrame:
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#str.lstrip
@@ -852,19 +879,42 @@ def removesuffix(value, /, suffix):
     return _apply_via_str_or_pd(value, "removsuffix", suffix)
 
 
-def replace(value, /, old, new, count=-1):
-    """replace
+def _replace(text, pattern, new=None, count=inf):
+    if isinstance(pattern, dict):
+        for pat, replacement in pattern.items():
+            if callable(replacement):
+                replaced = 0
+                position = 0
+                while (replaced < count) and (position := text.find(pat, position)) != -1:
+                    new_text = replacement(pattern)
+                    text = text[:position] + new_text + text[position + len(pattern):]
+                    position += len(new_text)
+                    replaced += 1
+            else:
+                text = text.replace(pat, replacement, count)
+    else:
+        if isinf(count):
+            count = -1
+        text = text.replace(pattern, new, count)
+    return text
 
-    We use the signature of built-in ``str`` methods. It differs from ``pd.Series.str.replace()``.
+
+def replace(value, pattern, new=None, /, count=inf):
+    """replace
 
     Parameters:
         value (str | list[str] | tuple[str] | pd.Series[str]): string to replace
-        old (str): old string
-        new (str): new string
-        count (int): count
+        pattern (str | dict): old string, or a dict from old string to new string
+        new (str | None): new string if ``pattern`` is the old string
+        count (int | inf): maximum number of replacements.
+            Default value (inf) means do not limit the number of replacements.
+            0 means disabling replacements.
 
     Returns:
         string replaced.
+
+    Notes:
+        The parameters differ from either the built-in ``str.replace`` method or ``pd.Series.str.replace`` method.
 
     Examples:
         >>> replace('Hello World', 'World', 'Earth')
@@ -876,11 +926,15 @@ def replace(value, /, old, new, count=-1):
         0    Hello
         1    Earth
         dtype: object
+        >>> replace('aaaa', {'a': 'b'}, count=0)
+        'aaaa'
+        >>> replace('aaaa', {'a': 'b'}, count=2)
+        'bbaa'
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#str.replace
     """
-    return _elementwise_apply(value, "replace", old, new, count)
+    return _elementwise_apply(value, _replace, pattern, new, count)
 
 
 def rfind(value, /, sub, start=0, end=None):
@@ -983,7 +1037,7 @@ def rsplit(value, /, sep=None, maxsplit=-1, minsplit=0, fillvalue=None, expand=F
 
     Parameters:
         s (str | pd.Series): string to split
-        sep (Optional[str]): separator. By default split on whitespace
+        sep (str, optional): separator. By default split on whitespace
         maxsplit (int): maximum number of splits
         minsplit (int): minimum number of splits
         fillvalue (Optional): fill value if not enough splits
@@ -1021,7 +1075,7 @@ def split(value, /, sep=None, maxsplit=-1, minsplit=0, fillvalue=None, expand=Fa
 
     Parameters:
         value (str | pd.Series): string to split
-        sep (Optional[str]): separator. By default split on whitespace
+        sep (str, optional): separator. By default split on whitespace
         maxsplit (int): maximum number of splits
         minsplit (int): minimum number of splits
         fillvalue (Optional): fill value if not enough splits
@@ -1088,6 +1142,58 @@ def swapcase(value, /):
         https://docs.python.org/3/library/stdtypes.html#str.swapcase
     """
     return _apply_via_str_or_pd(value, "swapcase")
+
+
+def _sub(value, pattern, new, count, flags):
+    if count == 0:  # no change allowed
+        count = -1
+    elif isinf(count):  # no limits on change number
+        count = 0
+    if isinstance(pattern, dict):
+        for pat, replacement in pattern.items():
+            value = re.sub(pat, replacement, value, count=count, flags=flags)
+    else:
+        value = re.sub(pattern, new, value, count=count, flags=flags)
+    return value
+
+
+def sub(value, pattern, new=None, count=inf, flags=0):
+    """Replace using regex.
+
+    Parameters:
+        value (str | list[str] | tuple[str] | pd.Series[str]): string to replace
+        pattern (str | dict): old pattern, or a dict from old string to new string
+        new (str | None): new string if ``pattern`` is the old string
+        count (int | inf): maximum number of replacements.
+            By default, there is no limit on the number of replacements.
+            0 means disabling replacements.
+        flags (re.RegexFlag):
+
+    Returns:
+        string replaced.
+
+    Notes:
+        The parameters differ from the built-in ``re.sub`` method.
+
+    Examples:
+        >>> sub('Hello World', 'World', 'Earth')
+        'Hello Earth'
+        >>> sub(['Hello', 'World'], 'World', 'Earth')
+        ['Hello', 'Earth']
+        >>> import pandas as pd
+        >>> sub(pd.Series(['Hello', 'World']), 'World', 'Earth')
+        0    Hello
+        1    Earth
+        dtype: object
+        >>> sub('aaaa', {'a': 'b'}, count=0)
+        'aaaa'
+        >>> sub('aaaa', {'a': 'b'}, count=2)
+        'bbaa'
+
+    See also:
+        https://docs.python.org/3/library/re.html#re.sub
+    """
+    return _elementwise_apply(value, _sub, pattern, new, count, flags)
 
 
 def title(value, /):

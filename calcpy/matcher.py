@@ -1,46 +1,48 @@
-import operator
-from operator import methodcaller
-
 import numpy as np
 import pandas as pd
 
-from .pd import NDFrame
+from ._cmp import key_to_eq
 from ._nppd import overall_equal
+from .typing import ListTypes, DictTypes, StrLike, NDFrame
 
 
 class Matcher(object):
-    def __init__(self, matcher=None):
-        self.matcher = matcher or operator.eq
+    def __init__(self, eq=None, key=None):
+        self.set_key(eq=eq, key=key)
+
+    def set_key(self, eq=None, key=None):
+        if key is not None:
+            self._eq = key_to_eq(key)
+        else:
+            self._eq = eq or overall_equal
 
     def disassemble(self, values):
         return list(values)
 
-    def __call__(self, loper, roper):
-        return self.matcher(loper, roper)
+    def eq(self, loper, roper):
+        return self._eq(loper, roper)
 
 
 class SimpleMatcher(Matcher):
-    def __init__(self, matcher=None, assemble=None):
-        self.matcher = matcher or operator.eq
+    def __init__(self, eq=None, key=None, assemble=None):
+        super().__init__(eq=eq, key=key)
         self.assemble = assemble
 
 
 class DictMatcher(Matcher):
     def disassemble(self, values):
-        if hasattr(values, "items"):
-            return values.items()  # Python 3
-        return values.iteritems()  # Python 2
+        return values.items()
 
-    def __call__(self, loper, roper):
-        return self.matcher(loper[0], roper[0])
+    def eq(self, loper, roper):
+        return self._eq(loper[0], roper[0])
 
     def assemble(self, args):
         return {key: value for key, value in args}
 
 
 class NumpyArrayMatcher(SimpleMatcher):
-    def __init__(self, matcher=None):
-        self.matcher = matcher or np.array_equal
+    def __init__(self, eq=None, key=None):
+        super().__init__(eq=eq, key=key)
         self.assemble = np.concatenate
 
     def disassemble(self, values):
@@ -49,7 +51,7 @@ class NumpyArrayMatcher(SimpleMatcher):
         return results
 
 
-class PandasFrameMatcher:
+class PandasFrameMatcher(Matcher):
     """Matcher class for pd.DataFrame.
 
     Parameters:
@@ -71,25 +73,25 @@ class PandasFrameMatcher:
         >>> df0 = pd.DataFrame({"A": 1, "B": 2, "C": 3}, index=[0])
         >>> df1 = pd.DataFrame({"A": 1, "B": 2, "C": 3}, index=[0])
         >>> df2 = pd.DataFrame({"A": 1, "B": 2, "C": 3}, index=[0])
-        >>> len(unique([df0, df1, df2], matcher=PandasFrameMatcher()))
+        >>> len(unique([df0, df1, df2]))
         1
 
         >>> from calcpy import intersection
         >>> df0 = pd.DataFrame({"A": [1, 2, 3], "B": [3, 2, 3]}, index=["X", "Y", "Z"])
         >>> df1 = pd.DataFrame({"C": [4, 5, 6], "D": [8, 5, 2]}, index=["U", "V", "X"])
-        >>> intersection(df0, df1, matcher=PandasFrameMatcher(method="index"))
+        >>> intersection(df0, df1, key=PandasFrameMatcher(method="index"))
            A  B
         X  1  3
 
         >>> df0 = pd.DataFrame({"A": [1, 2, 3], "B": [3, 2, 3]}, index=["X", "Y", "Z"])
         >>> df1 = pd.DataFrame({"C": [4, 5, 6], "D": [8, 5, 2]}, index=["U", "V", "X"])
-        >>> intersection(df0, df1, matcher=PandasFrameMatcher(method="value"))  # return None
+        >>> intersection(df0, df1, key=PandasFrameMatcher(method="value"))  # return None
     """
-    def __init__(self, method="object", axis=0, matcher=None, **kwargs):
+    def __init__(self, method="object", axis=0, eq=None, key=None, **kwargs):
+        super().__init__(eq=eq, key=key)
         self.method = method
         self.kwargs = kwargs
         self.transpose = axis in [1, "columns"]
-        self.matcher = matcher or overall_equal
 
     def disassemble(self, values):
         if self.transpose:
@@ -98,17 +100,17 @@ class PandasFrameMatcher:
         results = [values.iloc[i:i+1] for i in range(count)]
         return results
 
-    def __call__(self, loper, roper):
+    def eq(self, loper, roper):
         if self.method == "object":
-            return self.matcher(loper, roper)
+            return self._eq(loper, roper)
         if self.method == "index":
-            return self.matcher(loper.index[0], roper.index[0])
+            return self._eq(loper.index[0], roper.index[0])
         if self.method == "value":
             concated = pd.concat([loper, roper])
             uniqued = concated.drop_duplicates(**self.kwargs)
             return len(uniqued) < len(concated)
         if self.method == "series":
-            return self.matcher(loper, roper)
+            return self._eq(loper, roper)
 
     def assemble(self, args):
         if len(args) == 0:
@@ -119,135 +121,24 @@ class PandasFrameMatcher:
         return results
 
 
-def _get_matcher(arg, matcher=None):
-    if isinstance(matcher, Matcher):
-        return matcher
-    if isinstance(arg, (list, tuple, set)):
-        return SimpleMatcher(matcher=matcher, assemble=type(arg))
-    if isinstance(arg, dict):
-        return DictMatcher(matcher=matcher)
-    if isinstance(arg, (str, bytes, bytearray)):
-        return SimpleMatcher(matcher=matcher, assemble="".join)
-    if isinstance(arg, np.ndarray):
-        return NumpyArrayMatcher(matcher=matcher)
-    if isinstance(arg, NDFrame):
-        return PandasFrameMatcher(matcher=matcher)
+# Register the matcher type for each collection type
+matcher_classes = {}
+matcher_classes[ListTypes] = SimpleMatcher(assemble=list)
+matcher_classes[tuple] = SimpleMatcher(assemble=tuple)
+matcher_classes[set] = SimpleMatcher(assemble=set)
+matcher_classes[DictTypes] = DictMatcher()
+matcher_classes[StrLike] = SimpleMatcher(assemble="".join)
+matcher_classes[np.ndarray] = NumpyArrayMatcher()
+matcher_classes[NDFrame] = PandasFrameMatcher()
+
+
+def _get_matcher(arg, eq=None, key=None, matcher=None):
+    for obj in [matcher, key]:
+        if isinstance(obj, Matcher):
+            return obj
+    for type_ in matcher_classes:
+        if isinstance(arg, type_):
+            matcher = matcher_classes[type_]
+            matcher.set_key(eq=eq, key=key)
+            return matcher
     raise NotImplementedError()
-
-
-def from_callable(callable, *args, **kwargs):
-    """Convert a callable to a binary comparison function.
-
-    Parameters:
-        callable (callable): A unary function that returns something can be compared by ``__eq___``.
-        args : Positional arguments for ``callable``.
-        kwargs : Keyword arguments for ``callable``.
-
-    Returns:
-        callable: A binary function that checks whether its two arguments are equal.
-
-    Examples:
-        >>> matcher = from_callable(len)
-        >>> matcher("Hello", "World")
-        True
-        >>> matcher("Hello", "Python")
-        False
-    """
-    def matcher(loper, roper):
-        lresult = callable(loper, *args, **kwargs)
-        rresult = callable(roper, *args, **kwargs)
-        return lresult == rresult
-    return matcher
-
-
-def from_attrgetter(attr, default=None):
-    """Convert an attribute name to a matcher.
-
-    Alias of ``from_callable(attrgetter(attr, default))``
-
-    Parameters:
-        attr (str): Attribute name
-        default: Default value if the attribute does not exist.
-
-    Returns:
-        A matcher that checks whether its two arguments are equal.
-
-    Examples:
-        >>> import numpy as np
-        >>> matcher = from_attrgetter("shape")
-        >>> matcher(np.array([1, 2, 3]), np.array([4, 5, 6]))
-        True
-    """
-    from ._op import attrgetter
-    callable = attrgetter(attr, default=default)
-    return from_callable(callable)
-
-
-def from_dict(mapper, default=None):
-    """Convert a dict to a matcher.
-
-    Alias of ``from_callable(mapper.__getitem__)``
-
-    Parameters:
-        mapper (dict): A dict that maps arguments to values.
-        default: Default value if the argument does not exist.
-
-    Returns:
-        A matcher that checks whether its two arguments are equal.
-
-    Examples:
-        >>> matcher = from_dict({'a': 1, 'b': 2, 'c': 1})
-        >>> matcher('a', 'b')
-        False
-        >>> matcher('a', 'c')
-        True
-    """
-    def fun(arg):
-        return mapper.get(arg, default)
-    return from_callable(fun)
-
-
-def from_itemgetter(item, default=None):
-    """Convert an itemgetter to a matcher.
-
-    Alias of ``from_callable(itemgetter(item, default))``
-
-    Parameters:
-        item (str): Item name
-        default: Default value if the item does not exist.
-
-    Returns:
-        A matcher that checks whether its two arguments are equal.
-
-    Examples:
-        >>> matcher = from_itemgetter("Sex")
-        >>> matcher({'Name': 'Peter', 'Sex': 'M'}, {'Name': 'John', 'Sex': 'M'})
-        True
-        >>> matcher({'Name': 'Marry', 'Sex': 'S'}, {'Name': 'Tom', 'Sex': 'M'})
-        False
-    """
-    from ._op import itemgetter
-    callable = itemgetter(item, default=default)
-    return from_callable(callable)
-
-
-def from_methodcaller(name, *args, **kwargs):
-    """Convert a method name to a matcher.
-
-    Alias of ``from_callable(methodcaller(name, *args, **kwargs))``
-
-    Parameters:
-        name (str): Method name
-        *args: Positional arguments for ``methodcaller``.
-        **kwargs: Keyword arguments for ``methodcaller``.
-
-    Returns:
-        A matcher that checks whether its two arguments are equal.
-
-    Examples:
-        >>> matcher = from_methodcaller("upper")
-        >>> matcher("Hello", "hello")
-        True
-    """
-    callable = methodcaller(name, *args, **kwargs)
-    return from_callable(callable)

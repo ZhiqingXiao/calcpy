@@ -2,7 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from pandas.core.generic import NDFrame
+
+from .typing import ListLike, NDFrame
 
 
 def overall_equal(loper, roper):
@@ -170,7 +171,7 @@ def broadcast_first(fun):
     def f(value, *args, **kwargs):
         def f0(arg):
             return fun(arg, *args, **kwargs)
-        if isinstance(value, (list, tuple)):
+        if isinstance(value, ListLike):
             return type(value)(f0(e) for e in value)
         if isinstance(value, np.ndarray):
             return np.vectorize(f0)(value)

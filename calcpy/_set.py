@@ -1,14 +1,14 @@
 from copy import copy
-from collections import defaultdict
 import functools
 
 from .matcher import _get_matcher
+from .typing import DictTypes
 from ._it import pairwise
 from ._seq import _unique_sequence
 from ._op import _concat, concat
 
 
-def union(*args, matcher=None):
+def union(*args, key=None):
     """Union of multiple parameters.
 
     This function can merge multiple ``dict``'s into one ``dict``. If two
@@ -18,7 +18,7 @@ def union(*args, matcher=None):
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Examples:
         >>> union([1, 2, 3], [3, 2], [2, 4], [])
@@ -38,27 +38,25 @@ def union(*args, matcher=None):
         >>> union({'a': 1, 'b': 2}, {'c': 13, 'a': 11}, {})
         {'a': 1, 'b': 2, 'c': 13}
 
-        Use a matcher:
+        Use key:
 
-        >>> from calcpy.matcher import from_callable
-        >>> matcher = from_callable(len)  # compare the length of each element
-        >>> union(["alpha", "beta"], ["gamma", "delta"], ["pi", "omega"], matcher=matcher)
+        >>> union(["alpha", "beta"], ["gamma", "delta"], ["pi", "omega"], key=len)
         ['alpha', 'beta', 'pi']
 
     See also:
         https://docs.python.org/3/library/stdtypes.html#frozenset.union
     """
-    matcher = _get_matcher(args[0], matcher=matcher)
+    matcher = _get_matcher(args[0], key=key)
     concated = _concat(*args, matcher=matcher, assemble=False)
     return _unique_sequence(concated, matcher=matcher, dissemble=False)
 
 
-def isdisjoint(*args, matcher=None):
+def isdisjoint(*args, key=None):
     """Check if the parameters are disjoint.
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -72,9 +70,8 @@ def isdisjoint(*args, matcher=None):
     See also:
         https://docs.python.org/3/library/stdtypes.html#frozenset.isdisjoint
     """
-    matcher = _get_matcher(args[0], matcher=matcher)
-    concated = concat(*args, matcher=matcher)
-    unioned = union(*args, matcher=matcher)
+    concated = concat(*args, key=key)
+    unioned = union(*args, key=key)
     return len(concated) == len(unioned)
 
 
@@ -89,48 +86,50 @@ def _wrapper2(fun, matcher):
 
 def _wrapper(fun):
     """Extend binary function to multi-ary function."""
-    def f(*args, matcher=None):
+    def f(*args, key=None):
         if len(args) == 0:
             return args
-        matcher = _get_matcher(args[0], matcher=matcher)
-        return functools.reduce(_wrapper2(fun, matcher), args)
+        matcher = _get_matcher(args[0], key=key)
+        return functools.reduce(_wrapper2(fun, matcher=matcher), args)
     return f
 
 
 def _wrapper_1dict(fun):
     """Support the case when the first parameter is a dict."""
-    def f(*args, matcher=None):
+    def f(*args, key=None):
         op = _wrapper(fun)
-        if len(args) >= 1 and isinstance(args[0], (dict, defaultdict)):
+        if len(args) >= 1 and isinstance(args[0], DictTypes):
             arg = args[0]
             arglist = list(arg)
             params = list(args)
             params[0] = arglist
-            keys = op(*params, matcher=matcher)
+            keys = op(*params, key=key)
             results = copy(arg)
             for key in arglist:
                 if key not in keys:
                     results.pop(key)
             return results
-        return op(*args, matcher=matcher)
+        return op(*args, key=key)
     return f
 
 
-def _intersection2(loper, roper, matcher):
+def _intersection2(loper, roper, key=None, matcher=None):
+    matcher = _get_matcher(loper, key=key, matcher=matcher)
     results = []
     for l in loper:  # noqa: E741
         for r in roper:
-            if matcher(l, r):
+            if matcher.eq(l, r):
                 results.append(l)
                 break
     return results
 
 
-def _difference2(loper, roper, matcher):
+def _difference2(loper, roper, key=None, matcher=None):
+    matcher = _get_matcher(loper, key=key, matcher=matcher)
     results = []
     for l in loper:  # noqa: E741
         for r in roper:
-            if matcher(l, r):
+            if matcher.eq(l, r):
                 break
         else:
             results.append(l)
@@ -144,7 +143,7 @@ def _symmetric_difference2(loper, roper, matcher):
 def _issubset2(loper, roper, matcher):
     for l in loper:  # noqa: E741
         for r in roper:
-            if matcher(l, r):
+            if matcher.eq(l, r):
                 break
         else:
             return False
@@ -154,7 +153,7 @@ def _issubset2(loper, roper, matcher):
 def _issuperset2(loper, roper, matcher):
     for r in roper:
         for l in loper:  # noqa: E741
-            if matcher(l, r):
+            if matcher.eq(l, r):
                 break
         else:
             return False
@@ -172,7 +171,7 @@ intersection.__doc__ = \
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Examples:
         >>> intersection('abcd', 'edc')
@@ -200,7 +199,7 @@ difference.__doc__ = \
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Examples:
         >>> difference('abcd', 'cat', 'bed')
@@ -223,7 +222,7 @@ symmetric_difference.__doc__ = \
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Examples:
         >>> symmetric_difference([1, 2, 3], [2, 3, 4], [3, 4])
@@ -238,10 +237,10 @@ symmetric_difference.__doc__ = \
 
 def _allpairwise_wrapper(fun):
     """Wrapper for better function signatures."""
-    def f(*args, matcher=None):
+    def f(*args, key=None):
         if len(args) <= 1:
             return True
-        matcher = _get_matcher(args[0], matcher=matcher)
+        matcher = _get_matcher(args[0], key=key)
         return all(fun(*p, matcher=matcher) for p in pairwise(args))
     return f
 
@@ -252,7 +251,7 @@ issubset.__doc__ = \
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:
@@ -275,7 +274,7 @@ issuperset.__doc__ = \
 
     Parameters:
         *args
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         bool:

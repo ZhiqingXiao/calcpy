@@ -32,10 +32,10 @@
             
   <h1>Source code for calcpy._set</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="kn">from</span> <span class="nn">.matcher</span> <span class="kn">import</span> <span class="n">_get_matcher</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">DictTypes</span>
 <span class="kn">from</span> <span class="nn">._it</span> <span class="kn">import</span> <span class="n">pairwise</span>
 <span class="kn">from</span> <span class="nn">._seq</span> <span class="kn">import</span> <span class="n">_unique_sequence</span>
 <span class="kn">from</span> <span class="nn">._op</span> <span class="kn">import</span> <span class="n">_concat</span><span class="p">,</span> <span class="n">concat</span>
@@ -43,7 +43,7 @@
 
 <div class="viewcode-block" id="union">
 <a class="viewcode-back" href="../../set.html#calcpy.union">[docs]</a>
-<span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Union of multiple parameters.</span>
 
 <span class="sd">    This function can merge multiple ``dict``&#39;s into one ``dict``. If two</span>
@@ -53,7 +53,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; union([1, 2, 3], [3, 2], [2, 4], [])</span>
@@ -73,17 +73,15 @@
 <span class="sd">        &gt;&gt;&gt; union({&#39;a&#39;: 1, &#39;b&#39;: 2}, {&#39;c&#39;: 13, &#39;a&#39;: 11}, {})</span>
 <span class="sd">        {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 13}</span>
 
-<span class="sd">        Use a matcher:</span>
+<span class="sd">        Use key:</span>
 
-<span class="sd">        &gt;&gt;&gt; from calcpy.matcher import from_callable</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_callable(len)  # compare the length of each element</span>
-<span class="sd">        &gt;&gt;&gt; union([&quot;alpha&quot;, &quot;beta&quot;], [&quot;gamma&quot;, &quot;delta&quot;], [&quot;pi&quot;, &quot;omega&quot;], matcher=matcher)</span>
+<span class="sd">        &gt;&gt;&gt; union([&quot;alpha&quot;, &quot;beta&quot;], [&quot;gamma&quot;, &quot;delta&quot;], [&quot;pi&quot;, &quot;omega&quot;], key=len)</span>
 <span class="sd">        [&#39;alpha&#39;, &#39;beta&#39;, &#39;pi&#39;]</span>
 
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#frozenset.union</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="n">concated</span> <span class="o">=</span> <span class="n">_concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">,</span> <span class="n">assemble</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_unique_sequence</span><span class="p">(</span><span class="n">concated</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">,</span> <span class="n">dissemble</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
@@ -91,12 +89,12 @@
 
 <div class="viewcode-block" id="isdisjoint">
 <a class="viewcode-back" href="../../set.html#calcpy.isdisjoint">[docs]</a>
-<span class="k">def</span> <span class="nf">isdisjoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">isdisjoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the parameters are disjoint.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -110,9 +108,8 @@
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/stdtypes.html#frozenset.isdisjoint</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
-    <span class="n">concated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
-    <span class="n">unioned</span> <span class="o">=</span> <span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+    <span class="n">concated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">unioned</span> <span class="o">=</span> <span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">concated</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">unioned</span><span class="p">)</span></div>
 
 
@@ -128,48 +125,50 @@
 
 <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extend binary function to multi-ary function.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">args</span>
-        <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">_wrapper2</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">matcher</span><span class="p">),</span> <span class="n">args</span><span class="p">)</span>
+        <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">_wrapper2</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">),</span> <span class="n">args</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">f</span>
 
 
 <span class="k">def</span> <span class="nf">_wrapper_1dict</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Support the case when the first parameter is a dict.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">op</span> <span class="o">=</span> <span class="n">_wrapper</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">defaultdict</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">DictTypes</span><span class="p">):</span>
             <span class="n">arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">arglist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
             <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">arglist</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">arglist</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
                     <span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">results</span>
-        <span class="k">return</span> <span class="n">op</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">f</span>
 
 
-<span class="k">def</span> <span class="nf">_intersection2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">matcher</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_intersection2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">loper</span><span class="p">:</span>  <span class="c1"># noqa: E741</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roper</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">matcher</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
                 <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
                 <span class="k">break</span>
     <span class="k">return</span> <span class="n">results</span>
 
 
-<span class="k">def</span> <span class="nf">_difference2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">matcher</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_difference2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">loper</span><span class="p">:</span>  <span class="c1"># noqa: E741</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roper</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">matcher</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
@@ -183,7 +182,7 @@
 <span class="k">def</span> <span class="nf">_issubset2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">matcher</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">loper</span><span class="p">:</span>  <span class="c1"># noqa: E741</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roper</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">matcher</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -193,7 +192,7 @@
 <span class="k">def</span> <span class="nf">_issuperset2</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">,</span> <span class="n">matcher</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roper</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">loper</span><span class="p">:</span>  <span class="c1"># noqa: E741</span>
-            <span class="k">if</span> <span class="n">matcher</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -211,7 +210,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; intersection(&#39;abcd&#39;, &#39;edc&#39;)</span>
@@ -239,7 +238,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; difference(&#39;abcd&#39;, &#39;cat&#39;, &#39;bed&#39;)</span>
@@ -262,7 +261,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; symmetric_difference([1, 2, 3], [2, 3, 4], [3, 4])</span>
@@ -277,10 +276,10 @@
 
 <span class="k">def</span> <span class="nf">_allpairwise_wrapper</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for better function signatures.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+        <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">fun</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">f</span>
 
@@ -291,7 +290,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -314,7 +313,7 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>

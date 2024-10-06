@@ -65,8 +65,8 @@ Examples:
 >>> enable_composition()
 >>> add(itemgetter(1), itemgetter(6, default=3), 10)([3, 4, 5])
 19
->>> from calcpy import identity
->>> add(identity, identity)(3, 4)
+>>> from calcpy import arggetter
+>>> add(arggetter(0), arggetter(1))(3, 4)
 7
 ```
 
@@ -97,7 +97,6 @@ range(2, 4)
 
 - `calcpy.demerge_args(fun)` replaces a single tuple/list argument to many positional arguments.
 
-
 Examples:
 
 ```python
@@ -112,13 +111,13 @@ Set-alike APIs operate objects with original order reserved and optional customi
 
 Documentation: https://zhiqingxiao.github.io/calcpy/set.html
 
-- `calcpy.union(*args, matcher=None)` returns the union of multiple arguments.
-- `calcpy.intersect(*args, matcher=None)` returns intersection of multiple arguments.
-- `calcpy.difference(arg, *args, matcher=None)` removes follow-up arguments from the first.
-- `calcpy.symmetric_difference(*args, matcher=None)` returns the symmetric difference (a.k.a exclusive-or) of multiple arguments.
-- `calcpy.isdisjoint(*args, matcher=None)` checks whether arguments are disjoint.
-- `calcpy.issubset(*args, matcher=None)` checks whether the former parameter is a subset of the later parameter.
-- `calcpy.issuperset(*args, matcher=None)` checks whether the former parameter is a superset of the later parameter.
+- `calcpy.union(*args, key=None)` returns the union of multiple arguments.
+- `calcpy.intersect(*args, key=None)` returns intersection of multiple arguments.
+- `calcpy.difference(arg, *args, key=None)` removes follow-up arguments from the first.
+- `calcpy.symmetric_difference(*args, key=None)` returns the symmetric difference (a.k.a exclusive-or) of multiple arguments.
+- `calcpy.isdisjoint(*args, key=None)` checks whether arguments are disjoint.
+- `calcpy.issubset(*args, key=None)` checks whether the former parameter is a subset of the later parameter.
+- `calcpy.issuperset(*args, key=None)` checks whether the former parameter is a superset of the later parameter.
 
 Examples:
 ```Python
@@ -129,15 +128,15 @@ Examples:
 
 Other functions with similar signatures:
 
-- `calcpy.eq(*args, matcher=None)` checks whether positional arguments are all equal.
-- `calcpy.ne(*args, matcher=None)` checks whether positional arguments are all distinct.
-- `calcpy.concat(*args, matcher=None)` concatenates multiple arguments.
+- `calcpy.eq(*args, key=None)` checks whether positional arguments are all equal.
+- `calcpy.ne(*args, key=None)` checks whether positional arguments are all distinct.
+- `calcpy.concat(*args, key=None)` concatenates multiple arguments.
 
 Functions apply on the only positional argument:
 
-- `calcpy.same(values, matcher=None)` checks whether all elements in the first positional argument are all equal.
-- `calcpy.distinct(values, matcher=None)` checks whether all elements in the first positional argument are all distinct.
-- `calcpy.unique(values, matcher=None)` removes duplicated entries.
+- `calcpy.same(values, key=None)` checks whether all elements in the first positional argument are all equal.
+- `calcpy.distinct(values, key=None)` checks whether all elements in the first positional argument are all distinct.
+- `calcpy.unique(values, key=None)` removes duplicated entries.
 
 Examples:
 ```Python
@@ -145,7 +144,6 @@ Examples:
 >>> unique([4, 3, 7, 3, 4])
 [4, 3, 7]
 ```
-
 
 *Supported object types*:
 `list`, `tuple`, `set`, `str`, `np.ndarray`, `pd.Series`, `pd.DataFrame`, and more.
@@ -156,62 +154,26 @@ The function `intersection()` and `difference()` support first argument of type 
 The function `union()` can merge multiple `dict`s into one `dict`. If two `dict`s `d1` and `d2` have the same key `k`, `union(d1, d2)` will use the value of `d1[k]` rather than `d2[k]`, which differs from `d1 | d2` who takes `d2[k]`.
 
 *Customized comparison*:
-The keyword parameter `matcher` is used for customized comparison function.
+The keyword parameter `key` is used for customized comparison function.
 By default, it is `None`, which uses the default way to compare two objects, i.e. compare them as a whole. It is the same as `calcpy.overall_equal()`. The function `calcpy.overall_equal()` behaves like `np.array_equal()` or `np.ndarray`s, and like `loper.equals(roper)` for `pd.Series`s and `pd.DataFrame`s.
 
-`calcpy` supports customized binary functions for object comparison. For example, the following customized function `lower_matcher` can be used to compare two `str`s according to their lowercases:
-
-```python
->>> def lower_matcher(loper, roper):
-...     return loper.lower() == roper.lower()
-...
->>> from calcpy import eq
->>> eq("Hello", "hello", "HELLO", matcher=lower_matcher)
-True
-```
-
-*Construct matchers*:
-The following helper functions are provided to construct the binary matcher function:
-
-- `calcpy.matcher.from_attrgetter(attr, default=None)`
-- `calcpy.matcher.from_callable(callable, *args, **kwargs)`
-- `calcpy.matcher.from_dict(mapper, default=None)`
-- `calcpy.matcher.from_itemgetter(item, default=None)`
-- `calcpy.matcher.from_methodcaller(name, *args, **kwargs)`
-
-Example:
+`calcpy` supports customized key functions for object comparison. For example, the following examples compare `str`s according to their lowercases:
 
 ```python
 >>> from calcpy import eq
->>> from calcpy.matcher import from_methodcaller
->>> lower_matcher = from_methodcaller("lower")
->>> eq("Hello", "hello", "HELLO", matcher=lower_matcher)
+>>> eq("Hello", "hello", "HELLO", key=str.lower)
 True
 ```
-
-*Matchers for Pandas Objects*:
-The class `calcpy.matcher.PandasFrameMatcher` for comparing `pd.Series`s and `pd.DataFrame`s.
-
-- `calcpy.matcher.PandasFrameMatcher()` compares pandas objects as a whole. It has the same effect as `calcpy.overall_equal()`.
-
-- `calcpy.matcher.PandasFrameMatcher("index")` compares index values of pandas objects.
-
-- `calcpy.matcher.PandasFrameMatcher("values")` compares values of pandas objects, ignoring the index values.
-
-- `calcpy.matcher.PandasFrameMatcher("series")` compares `pd.DataFrame` in a `pd.Series` way. By default, it is `left_series.equals(right_series)`.
-
-For `pd.DataFrame`, it also provides a keyword parameter `axis`. It compares each row when it is set to 0 (the default value) or `'index'`, and compares each column if `axis` is set to 1 or `'column'`.
-
 
 #### Enhanced Functional APIs
 
 Documentation: https://zhiqingxiao.github.io/calcpy/builtin.html
 
-- `calcpy.identity(value, *args, **kwargs)` returns the first value `value`.
+- `calcpy.arggetter(*keys, *, default)` instantiates a callable object that fetches position arguments and/or keyword arguments, with default value for missing arguments.
 
-- `calcpy.attrgetter(attr, ..., /, *, default)` instantiates a callable object that fetches the given attribute(s) from its operand, with default value for missing attributes.
+- `calcpy.attrgetter(*attrs, *, default)` instantiates a callable object that fetches the given attribute(s) from its operand, with default value for missing attributes.
 
-- `calcpy.itemgetter(item, ..., /, *, default)` instantiates a callable object that fetches the given item(s) from its operand, with muti-level keys and default value for missing items.
+- `calcpy.itemgetter(*items, *, default)` instantiates a callable object that fetches the given item(s) from its operand, with muti-level keys and default value for missing items.
 
 - `calcpy.constantcreator(value, /, *, copy=False)` instantiates a callable object that returns the same constant when it is called.
 
@@ -219,8 +181,9 @@ Documentation: https://zhiqingxiao.github.io/calcpy/builtin.html
 Examples:
 
 ```python
->>> from calcpy import identity
->>> identity("value", "other_input", key="other_keyword_input")
+>>> from calcpy import arggetter
+>>> getter = arggetter(0)  # get the first positional argument
+>>> getter("value", "other_input", key="other_keyword_input")
 'value'
 
 >>> from calcpy import attrgetter
@@ -294,12 +257,12 @@ We also extend the following functions in built-in modules `operator` so that it
 
 For examples, we have the following comparers. They support multiple numbers of arguments (including zero arguments and one argument).
 
-- `calcpy.lt(*args)`
-- `calcpy.le(*args)`
-- `calcpy.ge(*args)`
-- `calcpy.gt(*args)`
-- `calcpy.eq(*args, matcher=None)`
-- `calcpy.ne(*args, matcher=None)`
+- `calcpy.lt(*args, key=None)`
+- `calcpy.le(*args, key=None)`
+- `calcpy.ge(*args, key=None)`
+- `calcpy.gt(*args, key=None)`
+- `calcpy.eq(*args, key=None)`
+- `calcpy.ne(*args, key=None)`
 
 Usage Example:
 ```python

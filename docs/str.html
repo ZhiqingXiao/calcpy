@@ -76,6 +76,36 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="calcpy.str.capwords">
+<span class="sig-prename descclassname"><span class="pre">calcpy.str.</span></span><span class="sig-name descname"><span class="pre">capwords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_str.html#capwords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.str.capwords" title="Link to this definition">¶</a></dt>
+<dd><p>Capitalize the first character of each word in the string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em><em> | </em><em>bytes</em><em> | </em><em>bytearray</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em> | </em><em>pd.Series</em><em>)</em><em>[</em><em>str</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str | bytes | bytearray | (list | tuple | pd.Series)[str]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">capwords</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hello World&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">capwords</span><span class="p">([</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">])</span>
+<span class="go">[&#39;Hello&#39;, &#39;World&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">capwords</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">]))</span>
+<span class="go">0    Hello</span>
+<span class="go">1    World</span>
+<span class="go">dtype: object</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/string.html#string.capwords">https://docs.python.org/3/library/string.html#string.capwords</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="calcpy.str.casefold">
 <span class="sig-prename descclassname"><span class="pre">calcpy.str.</span></span><span class="sig-name descname"><span class="pre">casefold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_str.html#casefold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.str.casefold" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -862,7 +892,7 @@ consist solely of whitespace characters.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool | pd.Series | pd.DataFrame</p>
+<dd class="field-even"><p>str | pd.Series | pd.DataFrame</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -879,7 +909,7 @@ consist solely of whitespace characters.</p>
 <dd class="field-odd"><p><strong>value</strong> (<em>str</em><em> | </em><em>bytes</em><em> | </em><em>bytearray</em><em> | </em><em>list</em><em> | </em><em>tuple</em><em> | </em><em>pd.Series</em><em> | </em><em>pd.DataFrame</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool | pd.Series | pd.DataFrame</p>
+<dd class="field-even"><p>str | pd.Series | pd.DataFrame</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -899,7 +929,7 @@ consist solely of whitespace characters.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool | pd.Series | pd.DataFrame</p>
+<dd class="field-even"><p>str | pd.Series | pd.DataFrame</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -984,21 +1014,24 @@ Should be <code class="docutils literal notranslate"><span class="pre">False</sp
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.str.replace">
-<span class="sig-prename descclassname"><span class="pre">calcpy.str.</span></span><span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_str.html#replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.str.replace" title="Link to this definition">¶</a></dt>
-<dd><p>We use the signature of built-in <code class="docutils literal notranslate"><span class="pre">str</span></code> methods. It differs from <code class="docutils literal notranslate"><span class="pre">pd.Series.str.replace()</span></code>.</p>
-<dl class="field-list simple">
+<span class="sig-prename descclassname"><span class="pre">calcpy.str.</span></span><span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_str.html#replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.str.replace" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>tuple</em><em>[</em><em>str</em><em>] </em><em>| </em><em>pd.Series</em><em>[</em><em>str</em><em>]</em>) – string to replace</p></li>
-<li><p><strong>old</strong> (<em>str</em>) – old string</p></li>
-<li><p><strong>new</strong> (<em>str</em>) – new string</p></li>
-<li><p><strong>count</strong> (<em>int</em>) – count</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> | </em><em>dict</em>) – old string, or a dict from old string to new string</p></li>
+<li><p><strong>new</strong> (<em>str</em><em> | </em><em>None</em>) – new string if <code class="docutils literal notranslate"><span class="pre">pattern</span></code> is the old string</p></li>
+<li><p><strong>count</strong> (<em>int</em><em> | </em><em>inf</em>) – maximum number of replacements.
+Default value (inf) means do not limit the number of replacements.
+0 means disabling replacements.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>string replaced.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The parameters differ from either the built-in <code class="docutils literal notranslate"><span class="pre">str.replace</span></code> method or <code class="docutils literal notranslate"><span class="pre">pd.Series.str.replace</span></code> method.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Earth&#39;</span><span class="p">)</span>
 <span class="go">&#39;Hello Earth&#39;</span>
@@ -1009,6 +1042,10 @@ Should be <code class="docutils literal notranslate"><span class="pre">False</sp
 <span class="go">0    Hello</span>
 <span class="go">1    Earth</span>
 <span class="go">dtype: object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&#39;aaaa&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&#39;bbaa&#39;</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -1114,7 +1151,7 @@ Should be <code class="docutils literal notranslate"><span class="pre">False</sp
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> (<em>str</em><em> | </em><em>pd.Series</em>) – string to split</p></li>
-<li><p><strong>sep</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – separator. By default split on whitespace</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – separator. By default split on whitespace</p></li>
 <li><p><strong>maxsplit</strong> (<em>int</em>) – maximum number of splits</p></li>
 <li><p><strong>minsplit</strong> (<em>int</em>) – minimum number of splits</p></li>
 <li><p><strong>fillvalue</strong> (<em>Optional</em>) – fill value if not enough splits</p></li>
@@ -1170,7 +1207,7 @@ as possible are joined and then the placeholder is appended:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>str</em><em> | </em><em>pd.Series</em>) – string to split</p></li>
-<li><p><strong>sep</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – separator. By default split on whitespace</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – separator. By default split on whitespace</p></li>
 <li><p><strong>maxsplit</strong> (<em>int</em>) – maximum number of splits</p></li>
 <li><p><strong>minsplit</strong> (<em>int</em>) – minimum number of splits</p></li>
 <li><p><strong>fillvalue</strong> (<em>Optional</em>) – fill value if not enough splits</p></li>
@@ -1227,6 +1264,50 @@ Can be <code class="docutils literal notranslate"><span class="pre">True</span><
 <dd><div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.strip">https://docs.python.org/3/library/stdtypes.html#str.strip</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.str.sub">
+<span class="sig-prename descclassname"><span class="pre">calcpy.str.</span></span><span class="sig-name descname"><span class="pre">sub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_str.html#sub"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.str.sub" title="Link to this definition">¶</a></dt>
+<dd><p>Replace using regex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>tuple</em><em>[</em><em>str</em><em>] </em><em>| </em><em>pd.Series</em><em>[</em><em>str</em><em>]</em>) – string to replace</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> | </em><em>dict</em>) – old pattern, or a dict from old string to new string</p></li>
+<li><p><strong>new</strong> (<em>str</em><em> | </em><em>None</em>) – new string if <code class="docutils literal notranslate"><span class="pre">pattern</span></code> is the old string</p></li>
+<li><p><strong>count</strong> (<em>int</em><em> | </em><em>inf</em>) – maximum number of replacements.
+By default, there is no limit on the number of replacements.
+0 means disabling replacements.</p></li>
+<li><p><strong>flags</strong> (<em>re.RegexFlag</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string replaced.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The parameters differ from the built-in <code class="docutils literal notranslate"><span class="pre">re.sub</span></code> method.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Earth&#39;</span><span class="p">)</span>
+<span class="go">&#39;Hello Earth&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">([</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Earth&#39;</span><span class="p">)</span>
+<span class="go">[&#39;Hello&#39;, &#39;Earth&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">]),</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Earth&#39;</span><span class="p">)</span>
+<span class="go">0    Hello</span>
+<span class="go">1    Earth</span>
+<span class="go">dtype: object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&#39;aaaa&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&#39;bbaa&#39;</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/re.html#re.sub">https://docs.python.org/3/library/re.html#re.sub</a></p>
 </div>
 </dd></dl>
 
@@ -1303,6 +1384,7 @@ wrapping behaviour.</p>
 <li><a class="reference internal" href="#">String Operations</a><ul>
 <li><a class="reference internal" href="#list-of-apis">List of APIs</a><ul>
 <li><a class="reference internal" href="#calcpy.str.capitalize"><code class="docutils literal notranslate"><span class="pre">capitalize()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.str.capwords"><code class="docutils literal notranslate"><span class="pre">capwords()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.casefold"><code class="docutils literal notranslate"><span class="pre">casefold()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.center"><code class="docutils literal notranslate"><span class="pre">center()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.contains"><code class="docutils literal notranslate"><span class="pre">contains()</span></code></a></li>
@@ -1348,6 +1430,7 @@ wrapping behaviour.</p>
 <li><a class="reference internal" href="#calcpy.str.splitlines"><code class="docutils literal notranslate"><span class="pre">splitlines()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.startswith"><code class="docutils literal notranslate"><span class="pre">startswith()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.strip"><code class="docutils literal notranslate"><span class="pre">strip()</span></code></a></li>
+<li><a class="reference internal" href="#calcpy.str.sub"><code class="docutils literal notranslate"><span class="pre">sub()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.swapcase"><code class="docutils literal notranslate"><span class="pre">swapcase()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.title"><code class="docutils literal notranslate"><span class="pre">title()</span></code></a></li>
 <li><a class="reference internal" href="#calcpy.str.translate"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>

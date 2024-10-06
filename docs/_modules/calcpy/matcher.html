@@ -31,49 +31,51 @@
           <div class="body" role="main">
             
   <h1>Source code for calcpy.matcher</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">methodcaller</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.pd</span> <span class="kn">import</span> <span class="n">NDFrame</span>
+<span class="kn">from</span> <span class="nn">._cmp</span> <span class="kn">import</span> <span class="n">key_to_eq</span>
 <span class="kn">from</span> <span class="nn">._nppd</span> <span class="kn">import</span> <span class="n">overall_equal</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">ListTypes</span><span class="p">,</span> <span class="n">DictTypes</span><span class="p">,</span> <span class="n">StrLike</span><span class="p">,</span> <span class="n">NDFrame</span>
 
 
 <span class="k">class</span> <span class="nc">Matcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span> <span class="o">=</span> <span class="n">matcher</span> <span class="ow">or</span> <span class="n">operator</span><span class="o">.</span><span class="n">eq</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="o">=</span> <span class="n">key_to_eq</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="o">=</span> <span class="n">eq</span> <span class="ow">or</span> <span class="n">overall_equal</span>
 
     <span class="k">def</span> <span class="nf">disassemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">SimpleMatcher</span><span class="p">(</span><span class="n">Matcher</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assemble</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span> <span class="o">=</span> <span class="n">matcher</span> <span class="ow">or</span> <span class="n">operator</span><span class="o">.</span><span class="n">eq</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assemble</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assemble</span> <span class="o">=</span> <span class="n">assemble</span>
 
 
 <span class="k">class</span> <span class="nc">DictMatcher</span><span class="p">(</span><span class="n">Matcher</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">disassemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;items&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>  <span class="c1"># Python 3</span>
-        <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>  <span class="c1"># Python 2</span>
+        <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">roper</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="n">loper</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">roper</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">args</span><span class="p">}</span>
 
 
 <span class="k">class</span> <span class="nc">NumpyArrayMatcher</span><span class="p">(</span><span class="n">SimpleMatcher</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span> <span class="o">=</span> <span class="n">matcher</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assemble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span>
 
     <span class="k">def</span> <span class="nf">disassemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -84,7 +86,7 @@
 
 <div class="viewcode-block" id="PandasFrameMatcher">
 <a class="viewcode-back" href="../../cmp.html#calcpy.matcher.PandasFrameMatcher">[docs]</a>
-<span class="k">class</span> <span class="nc">PandasFrameMatcher</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">PandasFrameMatcher</span><span class="p">(</span><span class="n">Matcher</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matcher class for pd.DataFrame.</span>
 
 <span class="sd">    Parameters:</span>
@@ -106,25 +108,25 @@
 <span class="sd">        &gt;&gt;&gt; df0 = pd.DataFrame({&quot;A&quot;: 1, &quot;B&quot;: 2, &quot;C&quot;: 3}, index=[0])</span>
 <span class="sd">        &gt;&gt;&gt; df1 = pd.DataFrame({&quot;A&quot;: 1, &quot;B&quot;: 2, &quot;C&quot;: 3}, index=[0])</span>
 <span class="sd">        &gt;&gt;&gt; df2 = pd.DataFrame({&quot;A&quot;: 1, &quot;B&quot;: 2, &quot;C&quot;: 3}, index=[0])</span>
-<span class="sd">        &gt;&gt;&gt; len(unique([df0, df1, df2], matcher=PandasFrameMatcher()))</span>
+<span class="sd">        &gt;&gt;&gt; len(unique([df0, df1, df2]))</span>
 <span class="sd">        1</span>
 
 <span class="sd">        &gt;&gt;&gt; from calcpy import intersection</span>
 <span class="sd">        &gt;&gt;&gt; df0 = pd.DataFrame({&quot;A&quot;: [1, 2, 3], &quot;B&quot;: [3, 2, 3]}, index=[&quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;])</span>
 <span class="sd">        &gt;&gt;&gt; df1 = pd.DataFrame({&quot;C&quot;: [4, 5, 6], &quot;D&quot;: [8, 5, 2]}, index=[&quot;U&quot;, &quot;V&quot;, &quot;X&quot;])</span>
-<span class="sd">        &gt;&gt;&gt; intersection(df0, df1, matcher=PandasFrameMatcher(method=&quot;index&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; intersection(df0, df1, key=PandasFrameMatcher(method=&quot;index&quot;))</span>
 <span class="sd">           A  B</span>
 <span class="sd">        X  1  3</span>
 
 <span class="sd">        &gt;&gt;&gt; df0 = pd.DataFrame({&quot;A&quot;: [1, 2, 3], &quot;B&quot;: [3, 2, 3]}, index=[&quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;])</span>
 <span class="sd">        &gt;&gt;&gt; df1 = pd.DataFrame({&quot;C&quot;: [4, 5, 6], &quot;D&quot;: [8, 5, 2]}, index=[&quot;U&quot;, &quot;V&quot;, &quot;X&quot;])</span>
-<span class="sd">        &gt;&gt;&gt; intersection(df0, df1, matcher=PandasFrameMatcher(method=&quot;value&quot;))  # return None</span>
+<span class="sd">        &gt;&gt;&gt; intersection(df0, df1, key=PandasFrameMatcher(method=&quot;value&quot;))  # return None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transpose</span> <span class="o">=</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span> <span class="o">=</span> <span class="n">matcher</span> <span class="ow">or</span> <span class="n">overall_equal</span>
 
     <span class="k">def</span> <span class="nf">disassemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose</span><span class="p">:</span>
@@ -133,17 +135,17 @@
         <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">results</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">loper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">roper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="n">loper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">roper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span>
             <span class="n">concated</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">])</span>
             <span class="n">uniqued</span> <span class="o">=</span> <span class="n">concated</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">uniqued</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">concated</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;series&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -155,153 +157,27 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_matcher</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">Matcher</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">matcher</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">,</span> <span class="n">assemble</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">DictMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">,</span> <span class="n">assemble</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">NumpyArrayMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">NDFrame</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">PandasFrameMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+<span class="c1"># Register the matcher type for each collection type</span>
+<span class="n">matcher_classes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="n">ListTypes</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">assemble</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">assemble</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="nb">set</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">assemble</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="n">DictTypes</span><span class="p">]</span> <span class="o">=</span> <span class="n">DictMatcher</span><span class="p">()</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="n">StrLike</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleMatcher</span><span class="p">(</span><span class="n">assemble</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">NumpyArrayMatcher</span><span class="p">()</span>
+<span class="n">matcher_classes</span><span class="p">[</span><span class="n">NDFrame</span><span class="p">]</span> <span class="o">=</span> <span class="n">PandasFrameMatcher</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_get_matcher</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="p">[</span><span class="n">matcher</span><span class="p">,</span> <span class="n">key</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Matcher</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">for</span> <span class="n">type_</span> <span class="ow">in</span> <span class="n">matcher_classes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">type_</span><span class="p">):</span>
+            <span class="n">matcher</span> <span class="o">=</span> <span class="n">matcher_classes</span><span class="p">[</span><span class="n">type_</span><span class="p">]</span>
+            <span class="n">matcher</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="n">eq</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">matcher</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
-
-
-<div class="viewcode-block" id="from_callable">
-<a class="viewcode-back" href="../../cmp.html#calcpy.matcher.from_callable">[docs]</a>
-<span class="k">def</span> <span class="nf">from_callable</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a callable to a binary comparison function.</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        callable (callable): A unary function that returns something can be compared by ``__eq___``.</span>
-<span class="sd">        args : Positional arguments for ``callable``.</span>
-<span class="sd">        kwargs : Keyword arguments for ``callable``.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        callable: A binary function that checks whether its two arguments are equal.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_callable(len)</span>
-<span class="sd">        &gt;&gt;&gt; matcher(&quot;Hello&quot;, &quot;World&quot;)</span>
-<span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; matcher(&quot;Hello&quot;, &quot;Python&quot;)</span>
-<span class="sd">        False</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">matcher</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="n">roper</span><span class="p">):</span>
-        <span class="n">lresult</span> <span class="o">=</span> <span class="nb">callable</span><span class="p">(</span><span class="n">loper</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">rresult</span> <span class="o">=</span> <span class="nb">callable</span><span class="p">(</span><span class="n">roper</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">lresult</span> <span class="o">==</span> <span class="n">rresult</span>
-    <span class="k">return</span> <span class="n">matcher</span></div>
-
-
-
-<div class="viewcode-block" id="from_attrgetter">
-<a class="viewcode-back" href="../../cmp.html#calcpy.matcher.from_attrgetter">[docs]</a>
-<span class="k">def</span> <span class="nf">from_attrgetter</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an attribute name to a matcher.</span>
-
-<span class="sd">    Alias of ``from_callable(attrgetter(attr, default))``</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        attr (str): Attribute name</span>
-<span class="sd">        default: Default value if the attribute does not exist.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A matcher that checks whether its two arguments are equal.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_attrgetter(&quot;shape&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; matcher(np.array([1, 2, 3]), np.array([4, 5, 6]))</span>
-<span class="sd">        True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">._op</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-    <span class="nb">callable</span> <span class="o">=</span> <span class="n">attrgetter</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_callable</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="from_dict">
-<a class="viewcode-back" href="../../cmp.html#calcpy.matcher.from_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dict to a matcher.</span>
-
-<span class="sd">    Alias of ``from_callable(mapper.__getitem__)``</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        mapper (dict): A dict that maps arguments to values.</span>
-<span class="sd">        default: Default value if the argument does not exist.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A matcher that checks whether its two arguments are equal.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_dict({&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 1})</span>
-<span class="sd">        &gt;&gt;&gt; matcher(&#39;a&#39;, &#39;b&#39;)</span>
-<span class="sd">        False</span>
-<span class="sd">        &gt;&gt;&gt; matcher(&#39;a&#39;, &#39;c&#39;)</span>
-<span class="sd">        True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_callable</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="from_itemgetter">
-<a class="viewcode-back" href="../../cmp.html#calcpy.matcher.from_itemgetter">[docs]</a>
-<span class="k">def</span> <span class="nf">from_itemgetter</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an itemgetter to a matcher.</span>
-
-<span class="sd">    Alias of ``from_callable(itemgetter(item, default))``</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        item (str): Item name</span>
-<span class="sd">        default: Default value if the item does not exist.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A matcher that checks whether its two arguments are equal.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_itemgetter(&quot;Sex&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; matcher({&#39;Name&#39;: &#39;Peter&#39;, &#39;Sex&#39;: &#39;M&#39;}, {&#39;Name&#39;: &#39;John&#39;, &#39;Sex&#39;: &#39;M&#39;})</span>
-<span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; matcher({&#39;Name&#39;: &#39;Marry&#39;, &#39;Sex&#39;: &#39;S&#39;}, {&#39;Name&#39;: &#39;Tom&#39;, &#39;Sex&#39;: &#39;M&#39;})</span>
-<span class="sd">        False</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">._op</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-    <span class="nb">callable</span> <span class="o">=</span> <span class="n">itemgetter</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_callable</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="from_methodcaller">
-<a class="viewcode-back" href="../../cmp.html#calcpy.matcher.from_methodcaller">[docs]</a>
-<span class="k">def</span> <span class="nf">from_methodcaller</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a method name to a matcher.</span>
-
-<span class="sd">    Alias of ``from_callable(methodcaller(name, *args, **kwargs))``</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Method name</span>
-<span class="sd">        *args: Positional arguments for ``methodcaller``.</span>
-<span class="sd">        **kwargs: Keyword arguments for ``methodcaller``.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A matcher that checks whether its two arguments are equal.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; matcher = from_methodcaller(&quot;upper&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; matcher(&quot;Hello&quot;, &quot;hello&quot;)</span>
-<span class="sd">        True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">callable</span> <span class="o">=</span> <span class="n">methodcaller</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_callable</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>

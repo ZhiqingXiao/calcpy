@@ -1,9 +1,9 @@
 Comparers
 =========
 
-``calcpy`` provides comparers to compare objects. The comparers support an arbitrary number of operands.
+``calcpy`` provides comparers to compare objects. The comparers support an arbitrary number of operands. It also has a keyword parameter ``key`` to customize the comparison.
 
-Additionally, it also provides the ``Matcher`` class to customize the tests for equality. They can be used in the keyword parameter ``matcher`` of many relevant functions.
+Experimental functionarity: The APIs provide the ``Matcher`` class to customize the tests for equality. They can be used in the keyword parameter ``key`` of many relevant functions.
 
 --------------------
 Inequality Comparers
@@ -26,25 +26,46 @@ Equality Comparers
 .. autofunction:: calcpy.unique
 .. autofunction:: calcpy.count_unique
 
-They support the keyword parameter ``matcher``. See the :ref:`matcher` section for details.
+-----------------------
+Convert among Comparers
+-----------------------
+
+We also provide some functions to convert comparers to each other.
+
+.. autofunction:: calcpy.lt_to_key
+.. autofunction:: calcpy.le_to_key
+.. autofunction:: calcpy.gt_to_key
+.. autofunction:: calcpy.ge_to_key
+.. autofunction:: calcpy.cmp_to_key
+
+.. autofunction:: calcpy.key_to_eq
+.. autofunction:: calcpy.key_to_ne
+.. autofunction:: calcpy.key_to_lt
+.. autofunction:: calcpy.key_to_le
+.. autofunction:: calcpy.key_to_gt
+.. autofunction:: calcpy.key_to_ge
+    
+.. autofunction:: calcpy.lt_to_cmp
+.. autofunction:: calcpy.le_to_cmp
+.. autofunction:: calcpy.ge_to_cmp
+.. autofunction:: calcpy.gt_to_cmp
+
+.. autofunction:: calcpy.cmp_to_eq
+.. autofunction:: calcpy.cmp_to_ne
+.. autofunction:: calcpy.cmp_to_lt
+.. autofunction:: calcpy.cmp_to_le
+.. autofunction:: calcpy.cmp_to_gt
+.. autofunction:: calcpy.cmp_to_ge
 
 .. _matcher:
 
--------
-Matcher
--------
+----------------------
+Matcher (Experimental)
+----------------------
 
 The `matcher` parameter is used to customize the comparison function.
 
 We provide some binary functions to check the equality of two objects. Especially, :py:func:`calcpy.overall_equal` compares two objects as a whole. It behaves like ``np.array_equal()`` for ``np.ndarray``, and behaves like ``loper.equals(roper)`` for ``pd.Series`` and ``pd.DataFrame``.
-
-The following helper functions are used to construct matchers:
-
-.. autofunction:: calcpy.matcher.from_attrgetter
-.. autofunction:: calcpy.matcher.from_callable
-.. autofunction:: calcpy.matcher.from_dict
-.. autofunction:: calcpy.matcher.from_itemgetter
-.. autofunction:: calcpy.matcher.from_methodcaller
 
 We also provide a class ``calcpy.matcher.PandasFrameMatcher`` for comparing ``pd.DataFrame``'s.
 

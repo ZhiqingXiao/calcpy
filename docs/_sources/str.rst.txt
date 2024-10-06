@@ -12,6 +12,7 @@ List of APIs
 ------------
 
 .. autofunction:: calcpy.str.capitalize
+.. autofunction:: calcpy.str.capwords
 .. autofunction:: calcpy.str.casefold
 .. autofunction:: calcpy.str.center
 .. autofunction:: calcpy.str.contains
@@ -57,6 +58,7 @@ List of APIs
 .. autofunction:: calcpy.str.splitlines
 .. autofunction:: calcpy.str.startswith
 .. autofunction:: calcpy.str.strip
+.. autofunction:: calcpy.str.sub
 .. autofunction:: calcpy.str.swapcase
 .. autofunction:: calcpy.str.title
 .. autofunction:: calcpy.str.translate

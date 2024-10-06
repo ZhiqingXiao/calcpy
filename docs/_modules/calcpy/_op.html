@@ -36,8 +36,8 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 
-<span class="kn">from</span> <span class="nn">._it</span> <span class="kn">import</span> <span class="n">pairwise</span><span class="p">,</span> <span class="n">allpairwise_call</span>
 <span class="kn">from</span> <span class="nn">.matcher</span> <span class="kn">import</span> <span class="n">_get_matcher</span>
+<span class="kn">from</span> <span class="nn">._it</span> <span class="kn">import</span> <span class="n">pairwise</span>
 <span class="kn">from</span> <span class="nn">._seq</span> <span class="kn">import</span> <span class="n">count_unique</span>
 
 
@@ -53,7 +53,7 @@
 
 <div class="viewcode-block" id="attrgetter">
 <a class="viewcode-back" href="../../builtin.html#calcpy.attrgetter">[docs]</a>
-<span class="k">def</span> <span class="nf">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a callable object that fetches the given attribute(s) from its operand.</span>
 
 <span class="sd">    Fully compatible with Python&#39;s built-in ``operator.attrgetter``,</span>
@@ -76,15 +76,15 @@
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/operator.html#operator.attrgetter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">attr</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">attr</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_resolve_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
 
         <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_resolve_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_resolve_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">g</span></div>
 
 
@@ -163,26 +163,56 @@
 
 
 
-<div class="viewcode-block" id="identity">
-<a class="viewcode-back" href="../../builtin.html#calcpy.identity">[docs]</a>
-<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the first positional arguments, and ignore other arguments.</span>
+<div class="viewcode-block" id="arggetter">
+<a class="viewcode-back" href="../../builtin.html#calcpy.arggetter">[docs]</a>
+<span class="k">def</span> <span class="nf">arggetter</span><span class="p">(</span><span class="o">*</span><span class="n">keys</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a callable object that fetches the nth positional argument from its operand.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        *keys (int | str, for each positional parameter):</span>
+<span class="sd">            If it is an ``int`` (can be negative), it is the index of the positional argument to be fetched.</span>
+<span class="sd">            If it is a ``str``, it is the name of keyword argument to be fetched.</span>
+<span class="sd">        default: Default value to return when the argument is not found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable:</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        Return the first position parameter and ignore all other parameters.</span>
+<span class="sd">        Get the first positional argument.</span>
 
-<span class="sd">        &gt;&gt;&gt; result = identity(&quot;value&quot;, &quot;other_input&quot;, key=&quot;other_keyword_input&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; result</span>
-<span class="sd">        &#39;value&#39;</span>
+<span class="sd">        &gt;&gt;&gt; getter = arggetter(0)</span>
+<span class="sd">        &gt;&gt;&gt; getter(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, key=&quot;value&quot;)</span>
+<span class="sd">        &#39;a&#39;</span>
 
-<span class="sd">        The return value is as-is without copying.</span>
+<span class="sd">        Get the positional arguments and keyword arguments.</span>
 
-<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame()</span>
-<span class="sd">        &gt;&gt;&gt; identity(df) is df</span>
-<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; getter = arggetter(-1, 0, 1, &quot;key&quot;, default=&quot;default&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; getter(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, key=&quot;value&quot;)</span>
+<span class="sd">        (&#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;value&#39;)</span>
+
+<span class="sd">        Get the positional arguments and keyword arguments with default values.</span>
+
+<span class="sd">        &gt;&gt;&gt; getter = arggetter(-1, 0, 1, 5, &quot;key&quot;, &quot;other&quot;, default=&quot;default&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; getter(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, key=&quot;value&quot;)</span>
+<span class="sd">        (&#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;default&#39;, &#39;value&#39;, &#39;default&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">value</span></div>
+    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="o">-</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">default</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># If only one result, return it directly</span>
+            <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">getter</span></div>
 
 
 
@@ -230,7 +260,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">copy</span> <span class="o">=</span> <span class="n">deepcopy</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">copy</span> <span class="o">=</span> <span class="n">identity</span>
+            <span class="n">copy</span> <span class="o">=</span> <span class="n">arggetter</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="n">copy</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -490,135 +520,68 @@
     <span class="k">return</span> <span class="n">all_</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-<span class="sd">&quot;&quot;&quot;Comparison functions that supports &gt;=0 arguments. &quot;&quot;&quot;</span>
-<span class="n">lt</span> <span class="o">=</span> <span class="n">allpairwise_call</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">)</span>
-<span class="n">lt</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Return ``True`` when all arguments are less than the next argument.</span>
+<span class="k">def</span> <span class="nf">_allpairwise_glet</span><span class="p">(</span><span class="n">glet_name</span><span class="p">):</span>
+    <span class="c1"># glet is short for the collection of [&quot;lt&quot;, &quot;le&quot;, &quot;gt&quot;, &quot;ge&quot;].</span>
+    <span class="n">glet</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">glet_name</span><span class="p">)</span>
 
-<span class="s2">    Fully compatible with Python&#39;s built-in ``operator.lt``.</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="p">(</span><span class="n">glet</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">glet_name</span>
+    <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Return ``True`` when all arguments are </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2"> the next argument.</span>
+
+<span class="s2">    Fully compatible with Python&#39;s built-in ``operator.</span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">``.</span>
 
 <span class="s2">    Parameters:</span>
 <span class="s2">        *args</span>
+<span class="s2">        key (callable):</span>
 
 <span class="s2">    Returns:</span>
 <span class="s2">        bool:</span>
 
 <span class="s2">    Examples:</span>
-<span class="s2">        &gt;&gt;&gt; lt()</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">()</span>
 <span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; lt(1)</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(1)</span>
 <span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; lt(1, 2)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; lt(1, 2, 3)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; lt(1, 1)</span>
-<span class="s2">        False</span>
-<span class="s2">        &gt;&gt;&gt; lt(1, 1, 2)</span>
-<span class="s2">        False</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(1, 1)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(1, 2)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(2, 1)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(1, 1, 2)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">glet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(1, 2, 3)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">glet</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &gt;&gt;&gt; </span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span><span class="s2">(3, 2, 1)</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">glet</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">glet</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span>
 
 <span class="s2">    See also:</span>
-<span class="s2">        https://docs.python.org/3/library/operator.html#operator.lt</span>
+<span class="s2">        https://docs.python.org/3/library/operator.html#operator.</span><span class="si">{</span><span class="n">glet_name</span><span class="si">}</span>
 <span class="s2">    &quot;&quot;&quot;</span>
-<span class="n">le</span> <span class="o">=</span> <span class="n">allpairwise_call</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
-<span class="n">le</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Return ``True`` when all arguments are less than or equal to the next argument.</span>
+    <span class="k">return</span> <span class="n">f</span>
 
-<span class="s2">    Fully compatible with Python&#39;s built-in ``operator.le``.</span>
 
-<span class="s2">    Parameters:</span>
-<span class="s2">        *args</span>
-
-<span class="s2">    Returns:</span>
-<span class="s2">        bool:</span>
-
-<span class="s2">    Examples:</span>
-<span class="s2">        &gt;&gt;&gt; le()</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; le(1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; le(1, 2)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; le(1, 2, 3)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; le(1, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; le(1, 1, 2)</span>
-<span class="s2">        False</span>
-
-<span class="s2">    See also:</span>
-<span class="s2">        https://docs.python.org/3/library/operator.html#operator.le</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-<span class="n">ge</span> <span class="o">=</span> <span class="n">allpairwise_call</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">)</span>
-<span class="n">ge</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Return ``True`` when all arguments are greater than or equal to the next argument.</span>
-
-<span class="s2">    Fully compatible with Python&#39;s built-in ``operator.ge``.</span>
-
-<span class="s2">    Parameters:</span>
-<span class="s2">        *args</span>
-
-<span class="s2">    Returns:</span>
-<span class="s2">        bool:</span>
-
-<span class="s2">    Examples:</span>
-<span class="s2">        &gt;&gt;&gt; ge()</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; ge(1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; ge(2, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; ge(3, 2, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; ge(1, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; ge(2, 1, 1)</span>
-<span class="s2">        True</span>
-
-<span class="s2">    See also:</span>
-<span class="s2">        https://docs.python.org/3/library/operator.html#operator.ge</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-<span class="n">gt</span> <span class="o">=</span> <span class="n">allpairwise_call</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">)</span>
-<span class="n">gt</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Return ``True`` when all arguments are greater than the next argument.</span>
-
-<span class="s2">    Fully compatible with Python&#39;s built-in ``operator.gt``.</span>
-
-<span class="s2">    Parameters:</span>
-<span class="s2">        *args</span>
-
-<span class="s2">    Returns:</span>
-<span class="s2">        bool:</span>
-
-<span class="s2">    Examples:</span>
-<span class="s2">        &gt;&gt;&gt; gt()</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; gt(1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; gt(2, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; gt(3, 2, 1)</span>
-<span class="s2">        True</span>
-<span class="s2">        &gt;&gt;&gt; gt(1, 1)</span>
-<span class="s2">        False</span>
-<span class="s2">        &gt;&gt;&gt; ge(2, 1, 1)</span>
-<span class="s2">        False</span>
-
-<span class="s2">    See also:</span>
-<span class="s2">        https://docs.python.org/3/library/operator.html#operator.gt</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="n">lt</span> <span class="o">=</span> <span class="n">_allpairwise_glet</span><span class="p">(</span><span class="s2">&quot;lt&quot;</span><span class="p">)</span>
+<span class="n">le</span> <span class="o">=</span> <span class="n">_allpairwise_glet</span><span class="p">(</span><span class="s2">&quot;le&quot;</span><span class="p">)</span>
+<span class="n">gt</span> <span class="o">=</span> <span class="n">_allpairwise_glet</span><span class="p">(</span><span class="s2">&quot;gt&quot;</span><span class="p">)</span>
+<span class="n">ge</span> <span class="o">=</span> <span class="n">_allpairwise_glet</span><span class="p">(</span><span class="s2">&quot;ge&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="eq">
 <a class="viewcode-back" href="../../cmp.html#calcpy.eq">[docs]</a>
-<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether all parameters are the same.</span>
 
 <span class="sd">    Fully compatible with Python&#39;s built-in ``operator.eq``.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -632,21 +595,21 @@
 <span class="sd">    See also:</span>
 <span class="sd">        https://docs.python.org/3/library/operator.html#operator.eq</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">distinct_count</span> <span class="o">=</span> <span class="n">count_unique</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+    <span class="n">distinct_count</span> <span class="o">=</span> <span class="n">count_unique</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">distinct_count</span> <span class="o">&lt;=</span> <span class="mi">1</span></div>
 
 
 
 <div class="viewcode-block" id="ne">
 <a class="viewcode-back" href="../../cmp.html#calcpy.ne">[docs]</a>
-<span class="k">def</span> <span class="nf">ne</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ne</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether all parameters are distinct.</span>
 
 <span class="sd">    Fully compatible with Python&#39;s built-in ``operator.ne``.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -661,19 +624,19 @@
 <span class="sd">        https://docs.python.org/3/library/operator.html#operator.ne</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">original_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">distinct_count</span> <span class="o">=</span> <span class="n">count_unique</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+    <span class="n">distinct_count</span> <span class="o">=</span> <span class="n">count_unique</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">original_count</span> <span class="o">==</span> <span class="n">distinct_count</span></div>
 
 
 
 <div class="viewcode-block" id="same">
 <a class="viewcode-back" href="../../cmp.html#calcpy.same">[docs]</a>
-<span class="k">def</span> <span class="nf">same</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">same</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether all elements are the same.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        values (iterable)</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -684,18 +647,18 @@
 <span class="sd">        &gt;&gt;&gt; same([1, 1, 2, 2])</span>
 <span class="sd">        False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">eq</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">eq</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="distinct">
 <a class="viewcode-back" href="../../cmp.html#calcpy.distinct">[docs]</a>
-<span class="k">def</span> <span class="nf">distinct</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">distinct</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether all elements are distinct.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        values (iterable)</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool:</span>
@@ -706,7 +669,7 @@
 <span class="sd">        &gt;&gt;&gt; distinct([[1, 2], [1, 3], [1, 3]])</span>
 <span class="sd">        False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">ne</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">ne</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span></div>
 
 
 
@@ -721,18 +684,22 @@
 
 <div class="viewcode-block" id="concat">
 <a class="viewcode-back" href="../../collect.html#calcpy.concat">[docs]</a>
-<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Concat multiple parameters.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        *args</span>
-<span class="sd">        matcher (Matcher)</span>
+<span class="sd">        key (callable)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; concat([1, 2, 3], [], [4, 5], [5])</span>
 <span class="sd">        [1, 2, 3, 4, 5, 5]</span>
 <span class="sd">        &gt;&gt;&gt; concat((1, 2, 3), (), (4, 5), (5,))</span>
 <span class="sd">        (1, 2, 3, 4, 5, 5)</span>
+<span class="sd">        &gt;&gt;&gt; concat({1, 2, 3}, set(), {4, 5}, {5})</span>
+<span class="sd">        {1, 2, 3, 4, 5}</span>
+<span class="sd">        &gt;&gt;&gt; concat({1: &#39;a&#39;, 2: &#39;b&#39;}, {}, {3: &#39;c&#39;, 4: &#39;d&#39;}, {5: &#39;e&#39;})</span>
+<span class="sd">        {1: &#39;a&#39;, 2: &#39;b&#39;, 3: &#39;c&#39;, 4: &#39;d&#39;, 5: &#39;e&#39;}</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
 <span class="sd">        &gt;&gt;&gt; s = pd.Series([0, 1])</span>
@@ -745,7 +712,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
-    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">_get_matcher</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_concat</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span></div>
 
 </pre></div>

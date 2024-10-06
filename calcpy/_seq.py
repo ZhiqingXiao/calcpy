@@ -1,10 +1,9 @@
 from copy import copy
-import operator
 
-import numpy as np
 import pandas as pd
 
 from .matcher import _get_matcher
+from .typing import Uniquable
 
 
 def _unique_sequence(values, matcher=None, dissemble=True):
@@ -13,7 +12,7 @@ def _unique_sequence(values, matcher=None, dissemble=True):
     results = []
     for value in values:
         for result in results:
-            if matcher(result, value):
+            if matcher.eq(result, value):
                 break
         else:
             results.append(value)
@@ -21,12 +20,12 @@ def _unique_sequence(values, matcher=None, dissemble=True):
     return results
 
 
-def unique(values, *, matcher=None):
+def unique(values, *, key=None):
     """Drop duplications with original order kept.
 
     Parameters:
         values (iterable)
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         Unique values
@@ -41,18 +40,18 @@ def unique(values, *, matcher=None):
     """
     if len(values) == 0 or isinstance(values, dict):
         return values
-    if isinstance(values, (str, bytes, bytearray, list, tuple, set, np.ndarray, pd.Series, pd.DataFrame)):
-        matcher = _get_matcher(values, matcher)
+    if isinstance(values, Uniquable):
+        matcher = _get_matcher(values, key=key)
         return _unique_sequence(values, matcher=matcher)
     return pd.unique(values)
 
 
-def count_unique(values, *, matcher=None):
+def count_unique(values, *, key=None):
     """Count the number of distinct elements.
 
     Parameters:
         values (iterable)
-        matcher (Matcher)
+        key (callable)
 
     Returns:
         int: Number of distinct elements.
@@ -63,11 +62,11 @@ def count_unique(values, *, matcher=None):
         >>> count_unique('Hello')
         4
     """
-    result = len(unique(values, matcher=matcher))
+    result = len(unique(values, key=key))
     return result
 
 
-def min_repetend_len(values, *, allow_frac=True, matcher=None):
+def min_repetend_len(values, *, allow_frac=True, key=None):
     """Get minimum length of repetends.
 
     Parameters:
@@ -91,12 +90,14 @@ def min_repetend_len(values, *, allow_frac=True, matcher=None):
         7
     """
     length = len(values)
-    matcher = matcher or operator.eq
+    if length == 0:
+        return 0
+    matcher = _get_matcher(values, key=key)
     for l in range(1, length):  # noqa: E741
         if (not allow_frac) and (length % l > 0):
             continue
         for i in range(length-l):
-            if not matcher(values[i], values[i+l]):
+            if not matcher.eq(values[i], values[i+l]):
                 break
         else:
             return l

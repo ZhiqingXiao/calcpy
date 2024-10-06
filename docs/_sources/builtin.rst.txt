@@ -12,7 +12,7 @@ Callable Creators
 .. autofunction:: calcpy.attrgetter
 .. autofunction:: calcpy.itemgetter
 .. autofunction:: calcpy.methodcaller
-.. autofunction:: calcpy.identity
+.. autofunction:: calcpy.arggetter
 .. autofunction:: calcpy.constantcreator
 
 

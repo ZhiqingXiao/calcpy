@@ -1,5 +1,5 @@
-from copy import deepcopy
 from contextlib import contextmanager
+from copy import deepcopy
 from functools import partial
 
 _modes = dict(args=False, kwargs=False, force_callable=False)

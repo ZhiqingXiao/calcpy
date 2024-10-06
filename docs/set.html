@@ -46,7 +46,7 @@
 <li><p><strong>Preserve order</strong>: Unlike Python’s built-in set operations which don’t guarantee order, <cite>calcpy</cite> preserves the original order of elements.</p></li>
 <li><p><strong>Support object types</strong>: Works with <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>, and more.</p></li>
 <li><p><strong>Support multiple arguments</strong>: Most operations can take any number of arguments.</p></li>
-<li><p><strong>Support customizable comparison</strong>: You can provide custom comparison functions via a keyword parameter <code class="docutils literal notranslate"><span class="pre">matcher</span></code>. See <a class="reference internal" href="cmp.html#matcher"><span class="std std-ref">Matcher</span></a> for details.</p></li>
+<li><p><strong>Support customizable comparison</strong>: You can provide customed comparison functions via the keyword parameter <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p></li>
 </ul>
 <section id="example-usages">
 <h2>Example Usages<a class="headerlink" href="#example-usages" title="Link to this heading">¶</a></h2>
@@ -82,11 +82,10 @@ When using <code class="docutils literal notranslate"><span class="pre">union()<
 <p>This differs from Python’s dictionary union operator (|), which would use the value from the second dictionary for conflicting keys.</p>
 <p><strong>Intersection and Difference with Dictionaries:</strong>
 When using <code class="docutils literal notranslate"><span class="pre">intersection()</span></code> and <code class="docutils literal notranslate"><span class="pre">difference()</span></code> with dictionaries, the operations are performed on the dictionary keys. For example:
-When the first argument is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> and subsequent arguments are <code class="docutils literal notranslate"><span class="pre">list``s,</span> <span class="pre">``intersection()</span></code> and <code class="docutils literal notranslate"><span class="pre">difference()</span></code> operate on the dictionary keys:</p>
+When the first argument is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> and subsequent arguments are <code class="docutils literal notranslate"><span class="pre">list</span></code> s, <code class="docutils literal notranslate"><span class="pre">intersection()</span></code> and <code class="docutils literal notranslate"><span class="pre">difference()</span></code> operate on the dictionary keys:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">calcpy</span> <span class="kn">import</span> <span class="n">intersection</span><span class="p">,</span> <span class="n">difference</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span>
 <span class="go">{&quot;a&quot;: 1, &quot;b&quot;: 2}</span>
-
 <span class="gp">&gt;&gt;&gt; </span><span class="n">difference</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 <span class="go">{&quot;b&quot;: 2, &quot;c&quot;: 3}</span>
 </pre></div>
@@ -96,7 +95,7 @@ When the first argument is a <code class="docutils literal notranslate"><span cl
 <h2>Set Operation APIs<a class="headerlink" href="#set-operation-apis" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.difference">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.difference" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.difference" title="Link to this definition">¶</a></dt>
 <dd><p>Exclude follow-up parameters from the first one.</p>
 <p>The first argument can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, while the following positions can not
 be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>. If the first argument is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, it means to exclude all
@@ -106,7 +105,7 @@ argument.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -130,7 +129,7 @@ argument.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.intersection">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.intersection" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.intersection" title="Link to this definition">¶</a></dt>
 <dd><p>Intersect of multiple parameters.</p>
 <p>The first argument can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, while the following positions can not
 be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>. If the first argument is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, it means to limit the keys
@@ -140,7 +139,7 @@ follow-up position arguments (if any).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -164,13 +163,13 @@ follow-up position arguments (if any).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.isdisjoint">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">isdisjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_set.html#isdisjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.isdisjoint" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">isdisjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_set.html#isdisjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.isdisjoint" title="Link to this definition">¶</a></dt>
 <dd><p>Check if the parameters are disjoint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -192,13 +191,13 @@ follow-up position arguments (if any).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.issubset">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">issubset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.issubset" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">issubset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.issubset" title="Link to this definition">¶</a></dt>
 <dd><p>Check if the parameter is a subset of the follow-up parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -222,13 +221,13 @@ follow-up position arguments (if any).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.issuperset">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">issuperset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.issuperset" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">issuperset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.issuperset" title="Link to this definition">¶</a></dt>
 <dd><p>Check if the parameter is a superset of the follow-up parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -252,13 +251,13 @@ follow-up position arguments (if any).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.symmetric_difference">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">symmetric_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.symmetric_difference" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">symmetric_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.symmetric_difference" title="Link to this definition">¶</a></dt>
 <dd><p>Pick elements that appear in odd number of parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -277,7 +276,7 @@ follow-up position arguments (if any).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="calcpy.union">
-<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_set.html#union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.union" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calcpy/_set.html#union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#calcpy.union" title="Link to this definition">¶</a></dt>
 <dd><p>Union of multiple parameters.</p>
 <p>This function can merge multiple <code class="docutils literal notranslate"><span class="pre">dict</span></code>’s into one <code class="docutils literal notranslate"><span class="pre">dict</span></code>. If two
 <code class="docutils literal notranslate"><span class="pre">dict</span></code>’s <code class="docutils literal notranslate"><span class="pre">d1</span></code> and <code class="docutils literal notranslate"><span class="pre">d2</span></code> have the same key <code class="docutils literal notranslate"><span class="pre">k</span></code>, <code class="docutils literal notranslate"><span class="pre">union(d1,</span> <span class="pre">d2)</span></code>
@@ -287,7 +286,7 @@ will use the value of <code class="docutils literal notranslate"><span class="pr
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*args</strong></p></li>
-<li><p><strong>matcher</strong> (<em>Matcher</em>)</p></li>
+<li><p><strong>key</strong> (<em>callable</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -310,10 +309,8 @@ will use the value of <code class="docutils literal notranslate"><span class="pr
 <span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 13}</span>
 </pre></div>
 </div>
-<p>Use a matcher:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">calcpy.matcher</span> <span class="kn">import</span> <span class="n">from_callable</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">matcher</span> <span class="o">=</span> <span class="n">from_callable</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>  <span class="c1"># compare the length of each element</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">([</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;delta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+<p>Use key:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">([</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;delta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
 <span class="go">[&#39;alpha&#39;, &#39;beta&#39;, &#39;pi&#39;]</span>
 </pre></div>
 </div>

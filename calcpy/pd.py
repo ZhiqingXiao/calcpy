@@ -34,17 +34,17 @@ def _extend(frame, labels=None, index=None, columns=None, axis=None, mode="exten
 
 
 def extend(frame, /, labels=None, *, index=None, columns=None, axis=None, **kwargs):
-    """Extend the index of ``pd.Series`` or ``pd.DataFrame``.
+    """Add index values if the index values are not present.
 
     The API is simliar to ``pd.DataFrame.reindex()``.
 
     Parameters:
         frame (pd.Series | pd.DataFrame): Input data.
-        labels (Optional): New labels / index to conform the axis specified by.
-        index (Optional): index names.
-        columns (Optional): column names.
+        labels (list | tuple, optional): New labels / index to conform the axis specified by.
+        index (list | tuple, optional): index names.
+        columns (list | tuple, optional): column names.
             only work for DataFrame.
-        axis (Optional): axis to extend.
+        axis (int | str, optional): axis to extend.
             0: index, 1: columns.
             only work for DataFrame.
         kwargs: keyword arguments to be passed to ``pd.DataFrame.reindex()``,
@@ -73,17 +73,20 @@ def extend(frame, /, labels=None, *, index=None, columns=None, axis=None, **kwar
 
 
 def prioritize(frame, /, labels=None, *, index=None, columns=None, axis=None, **kwargs):
-    """Prioritize the index of ``pd.Series`` or ``pd.DataFrame``.
+    """Put some index values at the begining of the index.
 
-    The API is simliar to ``pd.DataFrame.reindex()``.
+    If the index is already in the index, the index will be moved to the begining.
+    If the index is not in the index, the index will be added to the index.
+
+    The API is simliar to ``pd.Series.reindex()`` and ``pd.DataFrame.reindex()``.
 
     Parameters:
         frame (pd.Series | pd.DataFrame): Input data.
-        labels (Optional): New labels / index to conform the axis specified by
-        index (Optional): index names
-        columns (Optional): column names.
+        labels (list | tuple, optional): New labels / index to conform the axis specified by
+        index (list | tuple, optional): index names
+        columns (list | tuple, optional): column names.
             only work for DataFrame.
-        axis (Optional): axis to extend.
+        axis (int | str, optional): axis to extend.
             0: index, 1: columns.
             only work for DataFrame.
         kwargs: keyword arguments to be passed to ``pd.DataFrame.reindex()``,
@@ -146,8 +149,8 @@ def convert_nested_dict_to_dataframe(data, /, *, index_cols=None, columns=None):
 
     Parameters:
         data (dict): Nested dict.
-        index_cols (Optional[int | str | (list | tuple)[str]]): Index names.
-        columns (Optional[int | (list | tuple)[str]]): Column names.
+        index_cols (int | str | (list | tuple)[str], optional): Index names.
+        columns (int | (list | tuple)[str]], optional): Column names.
 
     Returns:
         pd.DataFrame:

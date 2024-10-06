@@ -153,6 +153,35 @@
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fun</span></div>
 
+
+
+<div class="viewcode-block" id="skewer">
+<a class="viewcode-back" href="../../compo.html#calcpy.skewer">[docs]</a>
+<span class="k">def</span> <span class="nf">skewer</span><span class="p">(</span><span class="o">*</span><span class="n">callables</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Composite multiple callables into one callable.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        *callables (callable):</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable: A callable that calls all callables in order.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; def minmax(x, y):</span>
+<span class="sd">        ...     return min(x, y), max(x, y)</span>
+<span class="sd">        &gt;&gt;&gt; def mul(x, y):</span>
+<span class="sd">        ...     return x * y</span>
+<span class="sd">        &gt;&gt;&gt; skewered = skewer(minmax, mul)</span>
+<span class="sd">        &gt;&gt;&gt; skewered(5, 3)</span>
+<span class="sd">        15</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="k">for</span> <span class="nb">callable</span> <span class="ow">in</span> <span class="n">callables</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">callable</span><span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">fun</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>

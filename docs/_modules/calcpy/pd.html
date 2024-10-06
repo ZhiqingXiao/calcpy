@@ -69,17 +69,17 @@
 <div class="viewcode-block" id="extend">
 <a class="viewcode-back" href="../../pd.html#calcpy.pd.extend">[docs]</a>
 <span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extend the index of ``pd.Series`` or ``pd.DataFrame``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add index values if the index values are not present.</span>
 
 <span class="sd">    The API is simliar to ``pd.DataFrame.reindex()``.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        frame (pd.Series | pd.DataFrame): Input data.</span>
-<span class="sd">        labels (Optional): New labels / index to conform the axis specified by.</span>
-<span class="sd">        index (Optional): index names.</span>
-<span class="sd">        columns (Optional): column names.</span>
+<span class="sd">        labels (list | tuple, optional): New labels / index to conform the axis specified by.</span>
+<span class="sd">        index (list | tuple, optional): index names.</span>
+<span class="sd">        columns (list | tuple, optional): column names.</span>
 <span class="sd">            only work for DataFrame.</span>
-<span class="sd">        axis (Optional): axis to extend.</span>
+<span class="sd">        axis (int | str, optional): axis to extend.</span>
 <span class="sd">            0: index, 1: columns.</span>
 <span class="sd">            only work for DataFrame.</span>
 <span class="sd">        kwargs: keyword arguments to be passed to ``pd.DataFrame.reindex()``,</span>
@@ -111,17 +111,20 @@
 <div class="viewcode-block" id="prioritize">
 <a class="viewcode-back" href="../../pd.html#calcpy.pd.prioritize">[docs]</a>
 <span class="k">def</span> <span class="nf">prioritize</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prioritize the index of ``pd.Series`` or ``pd.DataFrame``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Put some index values at the begining of the index.</span>
 
-<span class="sd">    The API is simliar to ``pd.DataFrame.reindex()``.</span>
+<span class="sd">    If the index is already in the index, the index will be moved to the begining.</span>
+<span class="sd">    If the index is not in the index, the index will be added to the index.</span>
+
+<span class="sd">    The API is simliar to ``pd.Series.reindex()`` and ``pd.DataFrame.reindex()``.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        frame (pd.Series | pd.DataFrame): Input data.</span>
-<span class="sd">        labels (Optional): New labels / index to conform the axis specified by</span>
-<span class="sd">        index (Optional): index names</span>
-<span class="sd">        columns (Optional): column names.</span>
+<span class="sd">        labels (list | tuple, optional): New labels / index to conform the axis specified by</span>
+<span class="sd">        index (list | tuple, optional): index names</span>
+<span class="sd">        columns (list | tuple, optional): column names.</span>
 <span class="sd">            only work for DataFrame.</span>
-<span class="sd">        axis (Optional): axis to extend.</span>
+<span class="sd">        axis (int | str, optional): axis to extend.</span>
 <span class="sd">            0: index, 1: columns.</span>
 <span class="sd">            only work for DataFrame.</span>
 <span class="sd">        kwargs: keyword arguments to be passed to ``pd.DataFrame.reindex()``,</span>
@@ -190,8 +193,8 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        data (dict): Nested dict.</span>
-<span class="sd">        index_cols (Optional[int | str | (list | tuple)[str]]): Index names.</span>
-<span class="sd">        columns (Optional[int | (list | tuple)[str]]): Column names.</span>
+<span class="sd">        index_cols (int | str | (list | tuple)[str], optional): Index names.</span>
+<span class="sd">        columns (int | (list | tuple)[str]], optional): Column names.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame:</span>
