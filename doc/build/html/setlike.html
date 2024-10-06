@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Set-like APIs &#8212; calcpy 1.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sequence APIs" href="sequence.html" />
+    <link rel="prev" title="Comparers" href="cmp.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="set-like-apis">
+<h1>Set-like APIs<a class="headerlink" href="#set-like-apis" title="Link to this heading">¶</a></h1>
+<p>Set-alike APIs operate objects with original order reserved and optional customized comparison function.</p>
+<p><strong>Supported object types</strong></p>
+<ul class="simple">
+<li><p><cite>list</cite></p></li>
+<li><p><cite>tuple</cite></p></li>
+<li><p><cite>set</cite></p></li>
+<li><p><cite>np.ndarray</cite></p></li>
+<li><p><cite>pd.Series</cite></p></li>
+<li><p><cite>pd.DataFrame</cite></p></li>
+<li><p>others</p></li>
+</ul>
+<p><strong>On keyword parameter `matcher`</strong>: See <cite>cmp</cite> section for details.</p>
+<p><strong>`union()`, `intersect()`, and `exclude()` for `dict`</strong>:
+The function <cite>intersect()</cite> and <cite>exclude()</cite> support first argument of type <cite>dict</cite> and follow-up arguments as type <cite>list</cite>. In those cases, it means that limit the keys of the <cite>dict</cite> with a list or exclude lists out of the dict.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.union">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.union" title="Link to this definition">¶</a></dt>
+<dd><p>Union of multiple parameters.</p>
+<p>This function can merge multiple <cite>dict`s into one `dict</cite>. If two <cite>dict`s `d1</cite> and <cite>d2</cite> have the same key <cite>k</cite>, <cite>union(d1, d2)</cite> will use the value of <cite>d1[k]</cite> rather than <cite>d2[k]</cite>, which differs from <cite>d1 | d2</cite> who takes <cite>d2[k]</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – iterable</p></li>
+<li><p><strong>matcher</strong> – matcher</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[])</span>
+<span class="go">[1, 2, 3, 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">())</span>
+<span class="go">(1, 2, 3, 4)</span>
+</pre></div>
+</div>
+<p>The following example considers a list and moves some of its elements to the front.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># the list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># some elements that need to appear first</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="go">[3, 4, 1, 2, 5]</span>
+</pre></div>
+</div>
+<p>Union of multiple <cite>dict</cite>’s:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{})</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 13}</span>
+</pre></div>
+</div>
+<p>Use a matcher:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">calcpy.matcher</span> <span class="kn">import</span> <span class="n">from_callable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matcher</span> <span class="o">=</span> <span class="n">from_callable</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>  <span class="c1"># compare the length of each element</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union</span><span class="p">([</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;delta&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="s2">&quot;omega&quot;</span><span class="p">],</span> <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+<span class="go">[&#39;alpha&#39;, &#39;beta&#39;, &#39;pi&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.intersect">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.intersect" title="Link to this definition">¶</a></dt>
+<dd><p>Intersect of multiple parameters.</p>
+<p>The first argument can be a <cite>dict</cite>, while the following positions can not be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to limit the keys of the first arugment within the list specified by the intersection of follow-up position arguments (if any).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – iterable</p></li>
+<li><p><strong>matcher</strong> – matcher</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intersect</span><span class="p">(</span><span class="s1">&#39;abcd&#39;</span><span class="p">,</span> <span class="s1">&#39;edc&#39;</span><span class="p">)</span>
+<span class="go">&#39;cd&#39;</span>
+</pre></div>
+</div>
+<p>The case when the first argument is a <cite>dict</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intersect</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersect</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+<span class="go">{&#39;a&#39;: 1, &#39;c&#39;: 3}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.exclude">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.exclude" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude follow-up parameters from the first one.</p>
+<p>The first argument can be a <cite>dict</cite>, while the following positions can not be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to exclude all elements in the follow-up arguments out of the key of the first position argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – iterable</p></li>
+<li><p><strong>matcher</strong> – matcher</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exclude</span><span class="p">(</span><span class="s1">&#39;abcd&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;bed&#39;</span><span class="p">)</span>
+<span class="go">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>The case when the first argument is a <cite>dict</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exclude</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exclude</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">])</span>
+<span class="go">{&#39;a&#39;: 1, &#39;c&#39;: 3}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.symmetricdiff">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">symmetricdiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.symmetricdiff" title="Link to this definition">¶</a></dt>
+<dd><p>Pick elements that appear in odd number of parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – iterable</p></li>
+<li><p><strong>matcher</strong> – matcher</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">symmetricdiff</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">[1, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">symmetricdiff</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;he&#39;</span><span class="p">,</span> <span class="s1">&#39;okay&#39;</span><span class="p">)</span>
+<span class="go">&#39;llkay&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">calcpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fun.html">Functional Programming APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fdecorate.html">Function Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmp.html">Comparers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Set-like APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.union"><code class="docutils literal notranslate"><span class="pre">union()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.intersect"><code class="docutils literal notranslate"><span class="pre">intersect()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.exclude"><code class="docutils literal notranslate"><span class="pre">exclude()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.symmetricdiff"><code class="docutils literal notranslate"><span class="pre">symmetricdiff()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sequence.html">Sequence APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppd.html">Python-Numpy-Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pd.html">Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="op.html">Extensions of Built-in Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collect.html">Collection APIs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cmp.html" title="previous chapter">Comparers</a></li>
+      <li>Next: <a href="sequence.html" title="next chapter">Sequence APIs</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Zhiqing Xiao.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/setlike.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

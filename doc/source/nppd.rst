@@ -1,0 +1,24 @@
+Python-Numpy-Pandas APIs
+========================
+
+`calcpy` provides the following functions to provide a consistent interface to scaler, `np.ndarray`, `pd.Series`, and `pd.DataFrame`.
+
+----------
+Properties
+----------
+
+.. autofunction:: calcpy.shape
+.. autofunction:: calcpy.ndim
+.. autofunction:: calcpy.size
+
+------
+Create
+------
+
+.. autofunction:: calcpy.full_like
+
+-------
+Compare
+-------
+
+.. autofunction:: calcpy.overall_equal

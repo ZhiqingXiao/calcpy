@@ -9,5 +9,9 @@ __pycache__/
 # macOS
 .DS_Store
 
-# Zhiqing's
-*.zhiqing
+# sphinx intermediate files
+*.rst.txt
+*.doctree
+*.buildinfo
+*.pickle
+conf.py

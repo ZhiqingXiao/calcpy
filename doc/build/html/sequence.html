@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Sequence APIs &#8212; calcpy 1.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="File APIs" href="file.html" />
+    <link rel="prev" title="Set-like APIs" href="setlike.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="sequence-apis">
+<h1>Sequence APIs<a class="headerlink" href="#sequence-apis" title="Link to this heading">¶</a></h1>
+<p><strong>Repetend Analysis</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.sequence.min_repetend_len">
+<span class="sig-prename descclassname"><span class="pre">calcpy.sequence.</span></span><span class="sig-name descname"><span class="pre">min_repetend_len</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.sequence.min_repetend_len" title="Link to this definition">¶</a></dt>
+<dd><p>Get minimum length of repetends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>list</em>) – List of values as a sequence</p></li>
+<li><p><strong>allow_frac</strong> (<em>bool</em>) – Whether to allow partial repetend at the end of sequence</p></li>
+<li><p><strong>matcher</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">callable</span></code>, optional) – A object to be used to determine whether two values are the same</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The minimum length of repetends.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">min_repetend_len</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">min_repetend_len</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">min_repetend_len</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">min_repetend_len</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">min_repetend_len</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">allow_frac</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">7</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p><strong>Sequence Generator</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.sequence.A276128">
+<span class="sig-prename descclassname"><span class="pre">calcpy.sequence.</span></span><span class="sig-name descname"><span class="pre">A276128</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9223372036854775807</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.sequence.A276128" title="Link to this definition">¶</a></dt>
+<dd><p>Generate OEIS sequence A276128</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – Length of sequence</p>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>int</em> – Value of the sequence</p>
+</dd>
+</dl>
+<dl>
+<dt>Reference:</dt><dd><p><a class="reference external" href="https://oeis.org/A276128">https://oeis.org/A276128</a></p>
+</dd>
+<dt>Explanations:</dt><dd><p>(Adapted from <a class="reference external" href="https://oeis.org/A276128">https://oeis.org/A276128</a>)
+Definition of sequence:</p>
+<blockquote>
+<div><p>For a positive integer n, let the single-player game G[n] be as follows:
+x is a number in {0, 1, 2, …, n}, but unknown to the player.
+The player can guess as many times as he wants to determine the value of x.
+For each guess, the player can propose a possible value c in {0, 1, 2, …, n},
+but such guess will cost the player c dollars.
+After each guess, the player will get response to show whether c&lt;x, c=x, or c&gt;x.
+A guess strategy will consist a series of guesses to determine x.
+The cost of multiple guesses is defined to be the sum of the cost of each guess.
+The cost of guess strategy is defined to be the worse case of the cost of the guess series.
+The optimal guess strategy for the game G[n] is the guess strategy that has the minimum cost.
+a[n] is the cost of the optimal guess strategy.
+It is indifference whether the set {0, 1, …, n} contains the element 0
+since identifing this element takes no costs.</p>
+</div></blockquote>
+<p>Algorithms: Dynamic programming</p>
+</dd>
+<dt>Complexity:</dt><dd><dl class="simple">
+<dt>Generate a[n] when (a[0],…,a[n-1]) are available:</dt><dd><p>Time complexity: O(n)
+Space complexity: O(n)</p>
+</dd>
+<dt>Generate a[0],…,a[n-1] entries (n entries in total):</dt><dd><p>Time complexity: O(n^2)
+Space complexity: O(n^2)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">A276128</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0, 0, 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 21, 24]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">calcpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fun.html">Functional Programming APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fdecorate.html">Function Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmp.html">Comparers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setlike.html">Set-like APIs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sequence APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.sequence.min_repetend_len"><code class="docutils literal notranslate"><span class="pre">min_repetend_len()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.sequence.A276128"><code class="docutils literal notranslate"><span class="pre">A276128()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppd.html">Python-Numpy-Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pd.html">Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="op.html">Extensions of Built-in Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collect.html">Collection APIs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="setlike.html" title="previous chapter">Set-like APIs</a></li>
+      <li>Next: <a href="file.html" title="next chapter">File APIs</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Zhiqing Xiao.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/sequence.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
