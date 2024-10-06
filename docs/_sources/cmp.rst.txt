@@ -1,0 +1,63 @@
+Comparers
+=========
+
+``calcpy`` provides comparers to compare objects. The comparers support an arbitrary number of operands.
+
+Additionally, it also provides the ``Matcher`` class to customize the tests for equality. They can be used in the keyword parameter ``matcher`` of many relevant functions.
+
+--------------------
+Inequality Comparers
+--------------------
+
+.. autofunction:: calcpy.lt
+.. autofunction:: calcpy.le
+.. autofunction:: calcpy.ge
+.. autofunction:: calcpy.gt
+
+------------------
+Equality Comparers
+------------------
+
+.. autofunction:: calcpy.eq
+.. autofunction:: calcpy.ne
+
+.. autofunction:: calcpy.same
+.. autofunction:: calcpy.distinct
+.. autofunction:: calcpy.unique
+.. autofunction:: calcpy.count_unique
+
+They support the keyword parameter ``matcher``. See the :ref:`matcher` section for details.
+
+.. _matcher:
+
+-------
+Matcher
+-------
+
+The `matcher` parameter is used to customize the comparison function.
+
+We provide some binary functions to check the equality of two objects. Especially, :py:func:`calcpy.overall_equal` compares two objects as a whole. It behaves like ``np.array_equal()`` for ``np.ndarray``, and behaves like ``loper.equals(roper)`` for ``pd.Series`` and ``pd.DataFrame``.
+
+The following helper functions are used to construct matchers:
+
+.. autofunction:: calcpy.matcher.from_attrgetter
+.. autofunction:: calcpy.matcher.from_callable
+.. autofunction:: calcpy.matcher.from_dict
+.. autofunction:: calcpy.matcher.from_itemgetter
+.. autofunction:: calcpy.matcher.from_methodcaller
+
+We also provide a class ``calcpy.matcher.PandasFrameMatcher`` for comparing ``pd.DataFrame``'s.
+
+.. autoclass:: calcpy.matcher.PandasFrameMatcher
+
+Different ways to instantiate the ``PandasFrameMatcher`` class:
+
+- ``calcpy.matcher.PandasFrameMatcher()``: Compare whether pandas objects as a whole. It has the same effect as ``calcpy.overall_equal()``.
+
+- ``calcpy.matcher.PandasFrameMatcher("index")``: Compare index values of pandas objects.
+
+- ``calcpy.matcher.PandasFrameMatcher("values")``: Compare values of pandas objects, ignoring the index values.
+
+- ``calcpy.matcher.PandasFrameMatcher("series")``: Compare ``pd.DataFrame`` in a ``pd.Series`` way. By default, it is ``left_series.equals(right_series)``.
+
+For ``pd.DataFrame``, it also provides a keyword parameter ``axis``. It compares each row when it is set to 0 (the default value) or ``index``, and compares each column if ``axis`` is set to 1 or ``column``.

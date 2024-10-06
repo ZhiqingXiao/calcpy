@@ -1,114 +1,33 @@
-import functools
-
-import numpy as np
-import pandas as pd
-
-from .matcher import _get_matcher
-
-
-def unique(values, matcher=None, **kwargs):
-    """ Drop duplications with original order kept """
-    if len(values) == 0:
-        return values
-    if isinstance(values, (list, tuple, set, np.ndarray, pd.Series, pd.DataFrame)):
-        matcher = _get_matcher(values, matcher)
-        values = matcher.disassemble(values)
-        results = []
-        for value in values:
-            for result in results:
-                if matcher(result, value):
-                    break
-            else:
-                results.append(value)
-        results = matcher.assemble(results)
-        return results
-    return pd.unique(values, **kwargs)
+from ._collect import *  # noqa: F401,F403
+from ._compo import getcomponent
+from ._compo import *  # noqa: F401,F403
+from ._fill import fillerr, fillwhen  # noqa: F401
+from ._fun import *  # noqa: F401,F403
+from ._math import isnan  # noqa: F401
+from ._nppd import *  # noqa: F401,F403
+from ._op import attrgetter, itemgetter, methodcaller, identity, constantcreator  # noqa: F401
+from .pd import convert_nested_dict_to_dataframe, convert_series_to_nested_dict  # noqa: F401
+from ._seq import cycleperm, swap  # noqa: F401
+from . import _api
 
 
-def count_unique(args, matcher=None, **kwargs):
-    """ Count the number of distinct elements. """
-    result = len(unique(args, matcher=matcher, **kwargs))
-    return result
+def __getattr__(name):
+    return getcomponent(_api, name)
 
 
-def eq(*args, matcher=None, **kwargs):
-    """ Check whether all parameters are the same. """
-    distinct_count = count_unique(args, matcher=matcher, **kwargs)
-    return distinct_count <= 1
+__doc__ = """
+calcpy: Facility for Python Calculation
+=======================================
 
+Main features:
 
-def ne(*args, matcher=None, **kwargs):
-    """ Check whether all parameters are distinct. """
-    original_count = len(args)
-    distinct_count = count_unique(args, matcher=matcher, **kwargs)
-    return original_count == distinct_count
+- Extend Python Built-in Functions, including extended `set` operation functions, extended `str` operation functions, extended math functions.
 
+- Unify APIs supporting both Python built-in types and numpy&pandas datatypes.
 
-def concat(*args, matcher=None):
-    """ Concat multiple parameters. """
-    if len(args) == 0:
-        raise ValueError()
-    matcher = _get_matcher(args[0], matcher=matcher)
-    results = []
-    for arg in args:
-        results += matcher.disassemble(arg)
-    result = matcher.assemble(results)
-    return result
+- Return value decorations: If the function raises an error or returns invalid values such as `None` and `nan`, fill the values with designated values.
 
+- Function compositions: Combine multiple callable into one callable.
 
-def union(*args, matcher=None, **kwargs):
-    """ Union of multiple parameters. """
-    return unique(concat(*args), matcher=matcher, **kwargs)
-
-
-def _wrapper2(fun, matcher):
-    def f(loper, roper):
-        loper = matcher.disassemble(loper)
-        roper = matcher.disassemble(roper)
-        results = fun(loper, roper, matcher)
-        return matcher.assemble(results)
-    return f
-
-
-def _wrapper(fun):
-    def f(*args, matcher=None):
-        if len(args) == 0:
-            return args
-        matcher = _get_matcher(args[0], matcher=matcher)
-        return functools.reduce(_wrapper2(fun, matcher), args)
-    return f
-
-
-def _intersect2(loper, roper, matcher):
-    results = []
-    for l in loper:
-        for r in roper:
-            if matcher(l, r):
-                results.append(l)
-                break
-    return results
-
-
-def _exclude2(loper, roper, matcher):
-    results = []
-    for l in loper:
-        for r in roper:
-            if matcher(l, r):
-                break
-        else:
-            results.append(l)
-    return results
-
-
-def _xor2(loper, roper, matcher):
-    return concat(_exclude2(loper, roper, matcher=matcher), _exclude2(roper, loper, matcher=matcher))
-
-
-intersect = _wrapper(_intersect2)
-""" Intersect of multiple parameters. """
-
-exclude = _wrapper(_exclude2)
-""" Exclude follow-up parameters from the first one. """
-
-xor = _wrapper(_xor2)
-""" Pick elements that appear in odd number of parameters. """
+- Function decorators: Reorganize function parameters.
+"""  # module level docstring

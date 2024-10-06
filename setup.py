@@ -5,7 +5,7 @@ import sys
 from setuptools import find_packages, setup
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'calcpy'))
-from version import __version__ as version
+from version import __version__ as version  # noqa: E402
 
 setup(
     name='calcpy',
@@ -17,6 +17,7 @@ setup(
     author_email='xzq.xiaozhiqing@gmail.com',
     url='http://github.com/zhiqingxiao/calcpy',
     packages=find_packages(),
+    python_requires='>=3.8',
     include_package_data=True,
     install_requires=["numpy", "pandas"],
     classifiers=[

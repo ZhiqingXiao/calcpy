@@ -1,0 +1,21 @@
+Sequence
+========
+
+-----------
+Permutation
+-----------
+
+.. autofunction:: calcpy.cycleperm
+.. autofunction:: calcpy.swap
+
+-----------------
+Repetend Analysis
+-----------------
+
+.. autofunction:: calcpy.min_repetend_len
+
+------------------
+Sequence Generator
+------------------
+
+.. autofunction:: calcpy.oeis.A276128

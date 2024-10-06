@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>calcpy: a package of calculation utilities &#8212; calcpy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="calcpy-a-package-of-calculation-utilities">
+<h1><cite>calcpy</cite>: a package of calculation utilities<a class="headerlink" href="#calcpy-a-package-of-calculation-utilities" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#use-pip-to-install">Use pip to Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compo.html">Function Composition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compo.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compo.html#composition-mode-configuration-apis">Composition Mode Configuration APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compo.html#make-component">Make Component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compo.html#shorthand-functions-that-support-composition">Shorthand Functions that Support Composition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fun.html">Functional Programming APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fun.html#function-execution-apis">Function Execution APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fun.html#argument-reordering-apis">Argument reordering APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="builtin.html">Extension of Builtin Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="builtin.html#apis">APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builtin.html#enhanced-math-functions">Enhanced Math Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fill.html">Output Decorators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fill.html#output-decoration-apis">Output Decoration APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cmp.html">Comparers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cmp.html#inequality-comparers">Inequality Comparers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmp.html#equality-comparers">Equality Comparers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmp.html#matcher">Matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="set.html">Set-like APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="set.html#usages">Usages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set.html#apis">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nppd.html">Python-Numpy-Pandas APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nppd.html#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nppd.html#create">Create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nppd.html#compare">Compare</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pd.html">Pandas APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pd.html#calcpy.stack"><code class="docutils literal notranslate"><span class="pre">stack()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd.html#calcpy.convert_nested_dict_to_dataframe"><code class="docutils literal notranslate"><span class="pre">convert_nested_dict_to_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd.html#calcpy.convert_series_to_nested_dict"><code class="docutils literal notranslate"><span class="pre">convert_series_to_nested_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collect.html">Collection APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collect.html#calcpy.concat"><code class="docutils literal notranslate"><span class="pre">concat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collect.html#calcpy.convert_nested_dict_to_nested_list"><code class="docutils literal notranslate"><span class="pre">convert_nested_dict_to_nested_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="str.html">String APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="str.html#apis">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="seq.html">Sequence</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="seq.html#permutation">Permutation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seq.html#repetend-analysis">Repetend Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seq.html#sequence-generator">Sequence Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="file.html#hash">Hash</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">calcpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compo.html">Function Composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fun.html">Functional Programming APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builtin.html">Extension of Builtin Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fill.html">Output Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmp.html">Comparers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set.html">Set-like APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppd.html">Python-Numpy-Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pd.html">Pandas APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collect.html">Collection APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="str.html">String APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seq.html">Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File APIs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="install.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,23 @@
+``calcpy`` documentation
+========================
+
+``calcpy`` is a package for facilitating computation in Python. Its features include function composition, extending many Python built-in functions, unified functions for Python built-in types and numpy/pandas types, and decorators for return values and function arguments, etc.
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Table of Contents:
+
+   install
+   compo
+   fun
+   builtin
+   fill
+   cmp
+   set
+   nppd
+   pd
+   collect
+   str
+   seq
+   file

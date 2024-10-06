@@ -1,0 +1,19 @@
+Functional Programming
+======================
+
+``calcpy`` provides APIs for function execution and argument reordering.
+
+----------------
+Execute Function
+----------------
+
+.. autofunction:: calcpy.call
+
+-----------------
+Reorder Arguments
+-----------------
+
+.. autofunction:: calcpy.merge_args
+.. autofunction:: calcpy.demerge_args
+.. autofunction:: calcpy.cyclepermcaller
+.. autofunction:: calcpy.swapcaller

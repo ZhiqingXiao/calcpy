@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Pandas APIs &#8212; calcpy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Collection APIs" href="collect.html" />
+    <link rel="prev" title="Python-Numpy-Pandas APIs" href="nppd.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pandas-apis">
+<h1>Pandas APIs<a class="headerlink" href="#pandas-apis" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.stack">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.stack" title="Link to this definition">¶</a></dt>
+<dd><p>Stack a <code class="docutils literal notranslate"><span class="pre">pd.NDFrame</span></code> with <code class="docutils literal notranslate"><span class="pre">future_stack</span></code> behavior.</p>
+<p>Stack and silence the <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> “The prevoius implementation of stack is deprecated”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg</strong> – pd.DataFrame</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments to be passed to <code class="docutils literal notranslate"><span class="pre">pd.DataFrame.stack()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stack</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">0 A  1</span>
+<span class="go">  B  2</span>
+<span class="go">dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.convert_nested_dict_to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">convert_nested_dict_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.convert_nested_dict_to_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a nested dictionary to a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – nested dict</p></li>
+<li><p><strong>index_cols</strong> (<em>Optional</em><em>[</em><em>int</em><em> | </em><em>str</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>]</em>) – index names</p></li>
+<li><p><strong>columns</strong> (<em>Optional</em><em>[</em><em>int</em><em> | </em><em>(</em><em>list</em><em> | </em><em>tuple</em><em>)</em><em>[</em><em>str</em><em>]</em><em>]</em>) – column names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_nested_dict_to_dataframe</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">   0  1  2</span>
+<span class="go">0  A  H  1</span>
+<span class="go">1  A  J  2</span>
+<span class="go">2  E  D  3</span>
+<span class="go">3  E  T  4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_nested_dict_to_dataframe</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="go">     x</span>
+<span class="go">v c</span>
+<span class="go">A H  1</span>
+<span class="go">  J  2</span>
+<span class="go">E D  3</span>
+<span class="go">  T  4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcpy.convert_series_to_nested_dict">
+<span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">convert_series_to_nested_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.convert_series_to_nested_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a pandas Series or DataFrame to a nested dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>series</strong> (<em>pd.Series</em>) – data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]})</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])[</span><span class="s2">&quot;C&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_series_to_nested_dict</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">{1: {2: 4, 3: 5}}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">calcpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compo.html">Function Composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fun.html">Functional Programming APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builtin.html">Extension of Builtin Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fill.html">Output Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmp.html">Comparers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set.html">Set-like APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppd.html">Python-Numpy-Pandas APIs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pandas APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.stack"><code class="docutils literal notranslate"><span class="pre">stack()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.convert_nested_dict_to_dataframe"><code class="docutils literal notranslate"><span class="pre">convert_nested_dict_to_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcpy.convert_series_to_nested_dict"><code class="docutils literal notranslate"><span class="pre">convert_series_to_nested_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collect.html">Collection APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="str.html">String APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seq.html">Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File APIs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="nppd.html" title="previous chapter">Python-Numpy-Pandas APIs</a></li>
+      <li>Next: <a href="collect.html" title="next chapter">Collection APIs</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/pd.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
