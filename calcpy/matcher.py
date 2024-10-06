@@ -55,7 +55,7 @@ class PandasFrameMatcher:
     def __init__(self, method="object", axis=0, matcher=None, **kwargs):
         """Constructor
 
-        Args:
+        Parameters:
             method (str): can be `"object"`, `"series"`, `"index"`.
                 `"object"` means comparing the whole `pd.DataFrame` object.
                 `"series"` means comparing the whole `pd.Series`, which is equivalent
@@ -124,10 +124,10 @@ def _get_matcher(arg, matcher=None):
 def from_callable(callable, *args, **kwargs):
     """Convert a callable to a binary comparison function.
 
-    Args:
+    Parameters:
         callable (callable): A unary function that returns something can be compared by `__eq___`.
-        *args: Arguments for `callable`.
-        **kwargs: Keyword arguments for `callable`.
+        args: Arguments for `callable`.
+        kwargs: Keyword arguments for `callable`.
 
     Returns:
         callable: A binary function that checks whether its two arguments are equal.
@@ -151,7 +151,7 @@ def from_attrgetter(attr, default=None):
 
     Alias of from_callable(attrgetter(attr, default))
 
-    Args:
+    Parameters:
         attr (str): Attribute name
         default: Default value if the attribute does not exist.
 
@@ -173,7 +173,7 @@ def from_dict(mapper, default=None):
 
     Alias of from_callable(mapper.__getitem__)
 
-    Args:
+    Parameters:
         mapper (dict): A dict that maps arguments to values.
         default: Default value if the argument does not exist.
 
@@ -197,7 +197,7 @@ def from_itemgetter(item, default=None):
 
     Alias of from_callable(itemgetter(item, default))
 
-    Args:
+    Parameters:
         item (str): Item name
         default: Default value if the item does not exist.
 
@@ -220,7 +220,7 @@ def from_methodcaller(name, *args, **kwargs):
 
     Alias of from_callable(methodcaller(name, *args, **kwargs))
 
-    Args:
+    Parameters:
         name (str): Method name
         *args: Arguments for `methodcaller`.
         **kwargs: Keyword arguments for `methodcaller`.

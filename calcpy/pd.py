@@ -4,9 +4,7 @@ import pandas as pd
 from pandas.core.generic import NDFrame  # noqa: F401
 
 from .collect import convert_nested_dict_to_nested_list
-from .math import inf, nan
-from .nppd import ndim
-from .setlike import union
+from .math import inf
 
 
 def stack(arg, **kwargs):
@@ -14,7 +12,7 @@ def stack(arg, **kwargs):
 
     Stack and silence the `FutureWarning` "The prevoius implementation of stack is deprecated".
 
-    Args:
+    Parameters:
         arg: pd.DataFrame
         **kwargs: Keyword arguments to be passed to `pd.DataFrame.stack`.
 
@@ -110,4 +108,3 @@ def convert_series_to_nested_dict(arg):
         arg0 = arg.loc[key]
         results[key] = convert_series_to_nested_dict(arg0)
     return results
-

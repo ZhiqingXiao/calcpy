@@ -20,7 +20,7 @@ def isnan(value):
 
     Support all types.
 
-    Args:
+    Parameters:
         value: Any value.
 
     Returns:

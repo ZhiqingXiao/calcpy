@@ -11,7 +11,7 @@ def overall_equal(loper, roper):
     It behaves like `np.array_equal` for `np.ndarray`, and
     `loper.equals(roper)` for `pd.Series` and `pd.DataFrame`.
 
-    Args:
+    Parameters:
         loper: number or `np.ndarray` or `pd.Series` or `pd.DataFrame`
         roper: number or `np.ndarray` or `pd.Series` or `pd.DataFrame`
 
@@ -39,7 +39,7 @@ def overall_equal(loper, roper):
 def shape(arg):
     """Get the shape of an argument.
 
-    Args:
+    Parameters:
         arg: Any object
 
     Returns:
@@ -61,7 +61,7 @@ def shape(arg):
 def ndim(arg):
     """Get the number of dimensions of an argument.
 
-    Args:
+    Parameters:
         arg: Any object.
 
     Returns:
@@ -83,7 +83,7 @@ def ndim(arg):
 def size(arg):
     """Get the size of an argument.
 
-    Args:
+    Parameters:
         arg: Any object.
 
     Returns:
@@ -105,7 +105,7 @@ def size(arg):
 def full_like(template, fill_value, **kwargs):
     """Create a np.array or pd.Series or pd.DataFrame with the same shape as template.
 
-    Args:
+    Parameters:
         template: np.ndarray or pd.Series or pd.DataFrame
         fill_value: Any object
         **kwargs: Keyword arguments for np.full_alike, pd.Series, or pd.DataFrame.

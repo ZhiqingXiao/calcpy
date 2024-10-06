@@ -7,10 +7,10 @@ from sys import maxsize
 def min_repetend_len(args, allow_frac=True, matcher=None):
     """Get minimum length of repetends.
 
-    Args:
+    Parameters:
         args (list): List of values as a sequence
         allow_frac (bool): Whether to allow partial repetend at the end of sequence
-        matcher (:obj:`callable`, optional): A object to be used to determine whether two values are the same
+        matcher: A object to be used to determine whether two values are the same
 
     Returns:
         int: The minimum length of repetends.
@@ -43,7 +43,7 @@ def min_repetend_len(args, allow_frac=True, matcher=None):
 def perm(values, cycle):
     """Permutates a list according to cycle notation.
 
-    Args:
+    Parameters:
         values (list): Sequence to permutate.
         cycle (list): Permutation rule in cyclc notation.
 
@@ -68,7 +68,7 @@ def perm(values, cycle):
 def swap(values, i=0, j=1):
     """Swap two elements in a list.
 
-    Args:
+    Parameters:
         values (list): Sequence to permutate.
         i (int): Index of the first element to swap.
         j (int): Index of the second element to swap.
@@ -91,7 +91,7 @@ def swap(values, i=0, j=1):
 def A276128(n=maxsize):
     """Generate OEIS sequence A276128
 
-    Args:
+    Parameters:
         n (int): Length of sequence
 
     Yields:

@@ -4,7 +4,7 @@ import hashlib
 def get_hash(path, method="sha256", batchsize=4096):
     """Get the hash value of a file
 
-    Args:
+    Parameters:
         path (str)
         method (str)
         batchsize (int)

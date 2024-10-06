@@ -155,7 +155,7 @@ def all_(iterable, empty=True):
 
     If the iterable is empty, return what `empty` specifies.
 
-    Args:
+    Parameters:
         iterable: Iterable object
         empty: the value if the iterable is empty.
 
@@ -184,7 +184,7 @@ def any_(iterable, empty=False):
 
     If the iterable is empty, return what `empty` specifies.
 
-    Args:
+    Parameters:
         iterable: Iterable object
         empty: the value if the iterable is empty.
 
@@ -213,7 +213,7 @@ def never(iterable, empty=True):
 
     If the iterable is empty, return what `empty` specifies.
 
-    Args:
+    Parameters:
         iterable: Iterable object
         empty: the value if the iterable is empty.
 
@@ -242,7 +242,7 @@ def odd(iterable, empty=False):
 
     If the iterable is empty, return what `empty` specifies.
 
-    Args:
+    Parameters:
         iterable: Iterable object
         empty: the value if the iterable is empty.
 
@@ -271,7 +271,7 @@ def odd(iterable, empty=False):
 def and_(*args, empty=True):
     """Return True if all values are True.
 
-    Args:
+    Parameters:
         *args: values
         empty: The value if there are no values
 
@@ -292,7 +292,7 @@ def and_(*args, empty=True):
 def or_(*args, empty=False):
     """Return True if any values are True.
 
-    Args:
+    Parameters:
         *args: values
         empty: The value if there are no values
 
@@ -313,7 +313,7 @@ def or_(*args, empty=False):
 def xor(*args, empty=False):
     """Return True if any values are True.
 
-    Args:
+    Parameters:
         *args: values
         empty: The value if there are no values
 
@@ -334,7 +334,7 @@ def xor(*args, empty=False):
 def allpairwise(binop, *args, **kwargs):
     """Return True when binary operator returns True for each pair of arguments.
 
-    Args:
+    Parameters:
         binop: Binary operator
         *args: Arguments
         **kwargs: Keyword arguments
@@ -387,7 +387,7 @@ lt.__name__ = "lt"
 lt.__doc__ = """
     Return True when all arguments are less than the next argument.
 
-    Args:
+    Parameters:
         *args: Arguments
 
     Returns:
@@ -412,7 +412,7 @@ le.__name__ = "le"
 le.__doc__ = """
     Return True when all arguments are less than or equal to the next argument.
 
-    Args:
+    Parameters:
         *args: Arguments
 
     Returns:
@@ -437,7 +437,7 @@ ge.__name__ = "ge"
 ge.__doc__ = """
     Return True when all arguments are greater than or equal to the next argument.
 
-    Args:
+    Parameters:
         *args: Arguments
 
     Returns:
@@ -462,7 +462,7 @@ gt.__name__ = "gt"
 gt.__doc__ = """
     Return True when all arguments are greater than the next argument.
 
-    Args:
+    Parameters:
         *args: Arguments
 
     Returns:

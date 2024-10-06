@@ -12,7 +12,7 @@ from .setlike import eq as _eq, ne as _ne
 class permcaller:
     """Callable that swaps position parameters according to cyclc notation.
 
-    Args:
+    Parameters:
         callable: Callable object.
         cycle: List of indices to swap.
 
@@ -40,7 +40,7 @@ class permcaller:
 class swapcaller(permcaller):
     """Callable that swaps positional arguments in a pair.
 
-    Args:
+    Parameters:
         callable: Callable object.
         i (int): Index of the argument to swap.
         j (int): Index of another argument to swap.
@@ -64,7 +64,7 @@ class swapcaller(permcaller):
 def call(f, *args, **kwargs):
     """Call a callable with positional arguments and keyword arguments.
 
-    Args:
+    Parameters:
         f: Callable object.
         *args: Positional arguments.
         **kwargs: Keyword arguments.
@@ -82,7 +82,7 @@ def call(f, *args, **kwargs):
 def merge_args(f):
     """Merge all positional arguments of a function to a single tuple argument
 
-    Args:
+    Parameters:
         f: Callable object
 
     Returns:
@@ -100,7 +100,7 @@ def merge_args(f):
 def demerge_args(f):
     """Replace a single tuple/list argument to many positional arguments.
 
-    Args:
+    Parameters:
         f: Callable object
 
     Returns:
@@ -118,7 +118,7 @@ def demerge_args(f):
 def fillerr(value=None):
     """Decorator that returns a default value if an error occurs.
 
-    Args:
+    Parameters:
         value: Default value to return if an error occur.
 
     Returns:
@@ -145,7 +145,7 @@ def fillerr(value=None):
 def fillwhen(check, value):
     """Decorator that returns a default value if a condition is met.
 
-    Args:
+    Parameters:
         check: Callable object that checks the condition.
         value: Default value to return if the condition is met.
 
@@ -176,7 +176,7 @@ def fillwhen(check, value):
 def fillnone(value=nan):
     """Decorator that returns a default value if the result is None.
 
-    Args:
+    Parameters:
         value: Default value to return if the result is None.
 
     Returns:
@@ -206,7 +206,7 @@ def fillnone(value=nan):
 def fillnan(value=0):
     """Decorator that returns a default value if the result is nan.
 
-    Args:
+    Parameters:
         value: Default value to return if the result is nan.
 
     Returns:
@@ -234,7 +234,7 @@ def fillnan(value=0):
 def combine(how, *funs):
     """Combine multiple callables into a single callable, using a combining function.
 
-    Args:
+    Parameters:
         how: Callable object that combines multiple results.
         *funs: Callable objects.
 
@@ -261,7 +261,7 @@ def create_combiner(how, name=None):
     combined.__doc__ = f"""
         Combine multiple callables into a single callable, using `{name}`.
 
-        Args:
+        Parameters:
             *funs: Callable objects.
 
         Returns:

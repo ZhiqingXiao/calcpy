@@ -4,7 +4,7 @@ from .math import inf
 def convert_nested_dict_to_nested_list(data, maxdepth=inf):
     """Convert a nested dictionary to a nested list.
 
-    Args:
+    Parameters:
         data (dict): The nested dictionary to convert.
         maxdepth (int): The maximum depth to convert to a nested list.
 

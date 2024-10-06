@@ -26,7 +26,7 @@ def _unique_sequence(values, matcher=None, dissemble=True):
 def unique(values, matcher=None):
     """Drop duplications with original order kept.
 
-    Args:
+    Parameters:
         values: iterable
         matcher: matcher
 
@@ -52,7 +52,7 @@ def unique(values, matcher=None):
 def count_unique(values, matcher=None):
     """Count the number of distinct elements.
 
-    Args:
+    Parameters:
         values: iterable
         matcher: matcher
 
@@ -72,7 +72,7 @@ def count_unique(values, matcher=None):
 def eq(*args, matcher=None):
     """Check whether all parameters are the same.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -92,7 +92,7 @@ def eq(*args, matcher=None):
 def ne(*args, matcher=None):
     """Check whether all parameters are distinct.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -113,7 +113,7 @@ def ne(*args, matcher=None):
 def same(values, matcher=None):
     """Check whether all elements are the same.
 
-    Args:
+    Parameters:
         values: iterable
         matcher: matcher
 
@@ -132,7 +132,7 @@ def same(values, matcher=None):
 def distinct(values, matcher=None):
     """Check whether all elements are distinct.
 
-    Args:
+    Parameters:
         values: iterable
         matcher: matcher
 
@@ -160,7 +160,7 @@ def _concat(*args, matcher, assemble=True):
 def concat(*args, matcher=None):
     """Concat multiple parameters.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -188,9 +188,11 @@ def concat(*args, matcher=None):
 def union(*args, matcher=None):
     """Union of multiple parameters.
 
-    This function can merge multiple `dict`s into one `dict`. If two `dict`s `d1` and `d2` have the same key `k`, `union(d1, d2)` will use the value of `d1[k]` rather than `d2[k]`, which differs from `d1 | d2` who takes `d2[k]`.
+    This function can merge multiple `dict`s into one `dict`. If two `dict`s
+    `d1` and `d2` have the same key `k`, `union(d1, d2)` will use the value of
+    `d1[k]` rather than `d2[k]`, which differs from `d1 | d2` who takes `d2[k]`.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -291,9 +293,12 @@ intersect = _wrapper_1dict(_intersect2)
 intersect.__doc__ = \
     """Intersect of multiple parameters.
 
-    The first argument can be a `dict`, while the following positions can not be a `dict`. If the first argument is a `dict`, it means to limit the keys of the first arugment within the list specified by the intersection of follow-up position arguments (if any).
+    The first argument can be a `dict`, while the following positions can not
+    be a `dict`. If the first argument is a `dict`, it means to limit the keys
+    of the first arugment within the list specified by the intersection of
+    follow-up position arguments (if any).
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -313,9 +318,12 @@ exclude = _wrapper_1dict(_exclude2)
 exclude.__doc__ = \
     """Exclude follow-up parameters from the first one.
 
-    The first argument can be a `dict`, while the following positions can not be a `dict`. If the first argument is a `dict`, it means to exclude all elements in the follow-up arguments out of the key of the first position argument.
+    The first argument can be a `dict`, while the following positions can not
+    be a `dict`. If the first argument is a `dict`, it means to exclude all
+    elements in the follow-up arguments out of the key of the first position
+    argument.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 
@@ -335,7 +343,7 @@ symmetricdiff = _wrapper(_symmetricdiff2)
 symmetricdiff.__doc__ = \
     """Pick elements that appear in odd number of parameters.
 
-    Args:
+    Parameters:
         *args: iterable
         matcher: matcher
 

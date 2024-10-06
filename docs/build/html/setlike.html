@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Set-like APIs &#8212; calcpy 1.0.1 documentation</title>
+    <title>Set-like APIs &#8212; calcpy  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,7 +52,9 @@ The function <cite>intersect()</cite> and <cite>exclude()</cite> support first a
 <dt class="sig sig-object py" id="calcpy.union">
 <span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.union" title="Link to this definition">¶</a></dt>
 <dd><p>Union of multiple parameters.</p>
-<p>This function can merge multiple <cite>dict`s into one `dict</cite>. If two <cite>dict`s `d1</cite> and <cite>d2</cite> have the same key <cite>k</cite>, <cite>union(d1, d2)</cite> will use the value of <cite>d1[k]</cite> rather than <cite>d2[k]</cite>, which differs from <cite>d1 | d2</cite> who takes <cite>d2[k]</cite>.</p>
+<p>This function can merge multiple <cite>dict`s into one `dict</cite>. If two <cite>dict`s
+`d1</cite> and <cite>d2</cite> have the same key <cite>k</cite>, <cite>union(d1, d2)</cite> will use the value of
+<cite>d1[k]</cite> rather than <cite>d2[k]</cite>, which differs from <cite>d1 | d2</cite> who takes <cite>d2[k]</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -93,7 +95,10 @@ The function <cite>intersect()</cite> and <cite>exclude()</cite> support first a
 <dt class="sig sig-object py" id="calcpy.intersect">
 <span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.intersect" title="Link to this definition">¶</a></dt>
 <dd><p>Intersect of multiple parameters.</p>
-<p>The first argument can be a <cite>dict</cite>, while the following positions can not be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to limit the keys of the first arugment within the list specified by the intersection of follow-up position arguments (if any).</p>
+<p>The first argument can be a <cite>dict</cite>, while the following positions can not
+be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to limit the keys
+of the first arugment within the list specified by the intersection of
+follow-up position arguments (if any).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -120,7 +125,10 @@ The function <cite>intersect()</cite> and <cite>exclude()</cite> support first a
 <dt class="sig sig-object py" id="calcpy.exclude">
 <span class="sig-prename descclassname"><span class="pre">calcpy.</span></span><span class="sig-name descname"><span class="pre">exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calcpy.exclude" title="Link to this definition">¶</a></dt>
 <dd><p>Exclude follow-up parameters from the first one.</p>
-<p>The first argument can be a <cite>dict</cite>, while the following positions can not be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to exclude all elements in the follow-up arguments out of the key of the first position argument.</p>
+<p>The first argument can be a <cite>dict</cite>, while the following positions can not
+be a <cite>dict</cite>. If the first argument is a <cite>dict</cite>, it means to exclude all
+elements in the follow-up arguments out of the key of the first position
+argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -236,7 +244,7 @@ The function <cite>intersect()</cite> and <cite>exclude()</cite> support first a
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2020, Zhiqing Xiao.
+      &#169;.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>

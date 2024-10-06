@@ -22,10 +22,7 @@ Matcher
 
 The `matcher` parameter is used to customize the comparison function.
 
-We provide some binary functions to check the equality of two objects.
-
-.. autofunction:: calcpy.overall_equal
-
+We provide some binary functions to check the equality of two objects. Especially, :py:func:`calcpy.overall_equal` compares two objects as a whole. It behaves like `np.array_equal()` for `np.ndarray`, and behaves like `loper.equals(roper)` for `pd.Series` and `pd.DataFrame`.
 
 The following helper functions are used to construct matchers:
 
